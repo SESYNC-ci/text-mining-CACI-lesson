@@ -1,15 +1,15 @@
 # Site Settings
 
 title: "Qualitative Data"
-baseurl: ""
-lesson: 8
-email: cyberhelp@sesync.org
 description: ""
+baseurl: "/text-mining-lesson"
+email: cyberhelp@sesync.org
 styleurl: https://cdn.rawgit.com/sesync-ci/lesson-stylesheets/1.0.1
 # styleurl: https://rawgit.com/sesync-ci/lesson-stylesheets/master
 reveal: https://cdn.rawgit.com/hakimel/reveal.js/3.3.0
 authors:
  - Ian Carroll
+lesson: 8
 
 # Slide Settings
 
