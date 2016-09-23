@@ -1,0 +1,118 @@
+tm - Text Mining package installs on macOS Okay
+
+RQDQ - doesn't install okay on macOS, should on Windows (not tested)?
+ - on mac
+   - install.packages("RGtk2", dependencies = T, type = 'mac.binary.mavericks')
+   - brew install gtk+
+   - meh, nope
+   
+   
+focus on tm and clustering
+https://rstudio-pubs-static.s3.amazonaws.com/31867_8236987cf0a8444e962ccd2aec46d9c3.html
+
+BagOfWords - corpus as matrix of term frequency
+
+What about NLP
+
+
+Want to distinguish data collection from our workflow stack
+
+
+data organization
+data manipulating
+vizualization
+
+... it's not really modeling or learning.
+
+so a reasonable viz from "multivariate" data is? or for graph data is?
+what is the fundamentally different data structure that comes from unstructured data.
+
+tabular data
+observations are made of discrete, pre-defined variables
+
+unstructure data
+obervations (texts) have not been made into variables yet, and unclear how to classify them
+
+models for structuring unstructured texts
+ - bag of words/n-grams
+ - ?
+
+coding is the process of counting frequency of themes
+
+
+more general topics for handling multivariate data (that often comes from text mining)
+categorical data
+dimensionality reduction
+
+
+could imagein a lesson on "computer assisted data collection", which includes using API's for tabular (structured) data, as well as "digitizing" unstructured data
+
+http://www.sherpasoftware.com/blog/structured-and-unstructured-data-what-is-it/
+
+use e-mails as example of distinguishing structured (but needing some assistance to collect, and unstructured), it's the unidentified variables part that makes it so hard
+- how many variables? and what is their type?
+
+want to distinguish qualitative from unstructured, if there is one
+ - example of "How do you feel?"
+   - if there were check boxes, it's a factor
+   - if it's open-ended, but someone categorizes it, it's a factor
+   - it if's open-ended, and uncategorized it's "qualitative", but not really necessarilly unstructured, it's a character column in my data frame <- it didn't measure/identify anything
+ - example of "Pick a random number?", is it quantitative
+   - it's clearly numerical, but the open-ended survey was clearly "character"
+   - did it measure something pre-defined? maybe that's the question we're getting at.
+
+and then what about relationed data, graph data... what's that?
+ - meh, just an association table that references the main table twice
+
+pattern recognition
+ - different from pattern matching, the recognition means finding a pattern you didn't previously know
+
+Mary's Collab Qual Analysis Site
+- Process Tracing
+- Measurement diagram in Cox 2015
+  - ratio, interval, ordinal, categorical, qualitative
+- Cox 2015
+  - Analysis is the process of describing and then making inferences based on a set of data. To make an inference means to combine data with something else, say a set of assumptions or theories or more general knowledge, and draw a conclusion that goes beyond what the data themselves present.
+
+
+i feel like there's something wrong with "tidy data"
+think of the NASS data, the epitomy of long, there's only one variable per record, the rest is "context/metadata" for that variable. this is different from the idea of one observational unit per record.
+
+categorical data becomes less useful when your sample size approaches the number of cateogries.
+if qualitative data has an infinite number of cateogries ... what do you do. had some thought about connection to case studies, but it's gone.
+
+
+how can R help with qualitative analysis (not data)?
+- interface with storage/database (RQDA, tm, RMongo)
+- text pattern searching - regex
+
+
+documents rather than tables for unstructured information
+
+
+
+Enron e-mails story
+concept: corrupt individual
+can you operationalize that in a way that you can't measure it
+
+remember, measuring is equivalent to getting data
+
+
+Qualitative
+
+- Surveys
+  - Check boxes
+    - discrete
+    - easy to analyze
+  - Interviews
+    -
+
+
+Computer Assisted Qualitative Data Analysis (CAQDA)
+
+Coding
+: Marking sections of a transcript that match a category.
+: Might make the variable "number of references to theme"
+  - for concept "Addresses Conflict", operationalize (interval) variable as #of text segments dealing with conflict
+
+

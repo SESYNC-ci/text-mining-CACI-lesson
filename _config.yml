@@ -1,0 +1,35 @@
+# Site Settings
+
+title: "Qualitative Data"
+baseurl: ""
+lesson: 8
+email: cyberhelp@sesync.org
+description: ""
+styleurl: https://cdn.rawgit.com/sesync-ci/lesson-stylesheets/1.0.1
+# styleurl: https://rawgit.com/sesync-ci/lesson-stylesheets/master
+reveal: https://cdn.rawgit.com/hakimel/reveal.js/3.3.0
+authors:
+ - Ian Carroll
+
+# Slide Settings
+
+slide_sorter:
+  - title
+  - rest
+  #   - storage of unstructured information
+  #     - genbank
+  #     - MongoDB?
+
+# Jekyll
+
+markdown: kramdown
+kramdown:
+  toc_levels: 2..2
+collections:
+  - slides
+exclude:
+  - README.md
+  - build.R
+  - "*.Rproj"
+  - "*.Rmd"
+

@@ -1,0 +1,254 @@
+---
+---
+
+## Structured Data (not "data structures")
+
+Structured data is a collection of multiple observations, each composed of one or more variables -- so far we have only delt with structured data.
+
+Key to structure: information comes in well-defined variables, i.e. the columns of our tidy tabular data.
+
+<!--split-->
+
+## Well-defined variables
+
+![]({{ site.baseurl }}/images/variable.png){:width="30%"}  
+*Cox, M. 2015. Ecology & Society 20(1):63.*
+{:.captioned}
+
+<!--split-->
+
+## Data Classes (not "data types")
+
+Interval (or Numeric)
+: Values are separated by meaningful intervals.
+
+Ordered
+: Ordered values without "distance" between them.
+
+Categorical
+: Finite set of distinct, un-ordered values.
+
+Qualitative
+: Unlimited, discrete, and un-ordered possibilities.
+
+<!--split-->
+
+## Unstructured Data
+
+Here "data" is a misnomer -- we mean information that has not been carved up into variables.
+
+Suppose you need data on how businesses fail, so you download [half a million e-mails from Enron executives](https://www.cs.cmu.edu/~./enron/) that preceeded the energy company's collapse in 2001.
+
+Structuring the data for analysis does not mean you quantify everything, although certainly some information can be quantified.
+Rather, turning unstructured information in structured data is a process of identifying concepts, definining variables, and assigning their values (i.e. taking measurements) from the textual, audio or video content.
+
+<!--split-->
+
+Possible examples for variables of different classes to associate with the Enron e-mails.
+
+Interval / Numerical
+: e.g. timestamp, e-mail length, occurrences of a given theme
+
+Ordered
+: e.g sender's position in the company, event in process-tracing sequence
+
+Categorical
+: e.g. recipient(s), sender's department, thematic code
+
+Qualitative
+: e.g. topic, greeting, sentiment
+
+<!--split-->
+
+What distinguishes *qualitative* data from unstructured information? Remember, we're only calling something data if it's the measurement of a **variable**.
+
+1. It is the measurement of a variable that relates to a defined concept
+1. It is qualitative, i.e. categorical, un-ordered and taking any value
+
+Processing of texts, surveys, recordings, etc. into variables (whether qualitative or not), is often part of "qualitiative data analysis".
+
+<!--split-->
+
+## Help from a computer
+
+- Scraping
+  - Process digitized information (tables, texts, images, recordings) into structured data.
+  - e.g. capture sender, date, greeting, etc. as values in a data frame.
+- Text mining
+  - Processing text on the way to producing qual/quant data (i.e. this overlaps with scraping).
+  - e.g. bag-of-words matrix
+- Coding
+  - Annotating a document collection with shared themes, sometimes called Computer Assisted Qualitative Data Analysis (CAQDA).
+  - e.g. manually labelling sections of each e-mail with [relational] codes/themes 
+- Topic modeling
+  - Algorithmic approach to coding extensive document collections.
+  - e.g. latent Dirichlet allocation (LDA)
+
+<!--split-->
+
+## Scraping
+
+![Text](http://imgs.xkcd.com/comics/regular_expressions.png "Wait, forgot to escape a space. Wheeeeee[taptaptap]eeeeee.")  
+*by Randall Munroe / [CC BY-NC](http://xkcd.com/license.html)*
+{:.captioned}
+
+<!--split-->
+
+RegEx is a very flexible, and very fast, program for parsing text.
+
+| Pattern     | Match                                                                 |
+|-------------+-----------------------------------------------------------------------|
+| Subject:.\* | <span style="color:red;">Subject: Re: TPS Reports</span>              |
+| \$[0-9,]+   | The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil. |
+| \b\S+@\S+\b | Send comments to <span style="color:red;">info@sesync.org</span>.     |
+
+Note that "\" must be escaped in R, so the first pattern would be scripted as `"\\$[0-9,]+"`.
+
+<!--split-->
+
+```{r eval = FALSE}
+install.packages(c("tm", "SnowballC", "stringr"))
+```
+
+Also, download text files with a mix of structured and unstructurd information from <http://sesync.us/g5>.
+
+<!--split-->
+
+```{r message = FALSE, title = "lesson-8.R"}
+library(tm)
+library(SnowballC)
+library(stringr)
+
+docs <- Corpus(DirSource("data/texts"))  # Put your texts here via your file explorer/finder
+meta(docs[[1]])
+```
+
+<!--split-->
+
+```{r}
+content(docs[[1]])
+```
+
+<!--split-->
+
+```{r title = "lesson-8.R"}
+str_match(content(docs[[1]])[1:10], '^From: (.*)$')
+```
+
+<!--split-->
+
+## Extract structured data
+
+```{r title = "lesson-8.R"}
+for (idx in seq(docs)) {
+  match <- str_match(content(docs[[idx]]), '^From: (.*)$')
+  from <- match[!is.na(match[, 1]), 2]
+  meta(docs[[idx]], "author") <- from[[1]]
+}
+```
+
+```{r}
+meta(docs[[1]])
+```
+
+<!--split-->
+
+## Text mining
+
+Extracting measurements of quantitative varialbes from unstructured information is the "field-work" component of research projects that rely on texts for empirical observations.
+
+- Searching strings for patterns.
+- Cleaning documents of un-informative strings.
+- Quantifying string occurrences and associations.
+
+<!--split-->
+
+## Isolate the unstructured information
+
+```{r eval = FALSE, title = "lesson-8.R"}
+for (idx in seq(docs)) {
+  header_last <- str_match(content(docs[[idx]]), '^X-FileName:')
+  header_last_idx <- which(!is.na(header_last))
+  header_last_idx <- header_last_idx[[1]]
+  content(docs[[idx]]) <- content(docs[[idx]])[-(1:header_last_idx)]
+}
+```
+
+<!--split-->
+
+## Functions for cleaning strings
+
+```{r title = "lesson-8.R"}
+
+docs <- tm_map(docs, removePunctuation)
+
+docs <- tm_map(docs, removeNumbers)
+
+docs <- tm_map(docs, content_transformer(tolower))
+
+docs <- tm_map(docs, removeWords, stopwords("english"))
+
+docs <- tm_map(docs, removeWords, c("department", "email"))
+
+docs <- tm_map(docs, stemDocument)
+
+docs <- tm_map(docs, stripWhitespace)
+
+```
+
+<!--split-->
+
+## Create Bag-Of-Words Matrix
+
+```{r title = "lesson-8.R"}
+dtm <- DocumentTermMatrix(docs)
+inspect(dtm[1:5, 1:10])
+```
+
+<!--split-->
+
+```{r title = "lesson-8.R"}
+dense_dtm <- removeSparseTerms(dtm, 1 - 10 / length(docs))
+inspect(dense_dtm[1:5, 1:10])
+```
+
+<!--split-->
+
+```{r title = "lesson-8.R"}
+freq <- findFreqTerms(dtm, 360)
+freq
+```
+
+<!--split-->
+
+## Associations
+
+```{r title = "lesson-8.R"}
+assoc <- findAssocs(dtm, "houston", 0.5)
+assoc
+```
+
+```{r title = "lesson-8.R"}
+cor(as.matrix(dtm[, c("houston", "anderson")]))
+```
+
+<!--split-->
+
+## Content analysis
+
+RQDA
+: A GUI tool (like NVivo, Atlas.ti) to assist manual coding of text.
+
+<!--split-->
+
+## Topic modeling
+
+This involves machine learning. We have not found an R package yet that has good turnkey algorithms for topic modeling.
+
+<!--split-->
+
+## Analysis of Qualitative Data
+
+Methods of analysis for qualitative data -- as defined in this lesson -- fall outside the scope of machine learning tools we are familiar with. In the future, we hope to address vizualization tools for qualitative data and are learning about relavant analytical methods.
+
+"Analysis is the process of describing and then making inferences based on a set of data. To make an inference means to combine data with something else, say a set of assumptions or theories or more general knowledge, and draw a conclusion that goes beyond what the data themselves present." ~ Cox, M. 2015.
