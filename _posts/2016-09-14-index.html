@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Qualitative Data</title>
+  <meta name="description" content="">
+
+  
+  <link rel="stylesheet" href="https://cdn.rawgit.com/sesync-ci/lesson-stylesheets/1.0.1/css/lesson.css">
+  
+  
+</head>
+
+
+  <body>
+
+    <div class="page-content">
+      <div class="wrapper">
+        
+<p><a name="/slides/title"></a></p>
+
+<h1 id="qualitative-data">Qualitative Data</h1>
+
+<p>Lesson 8 with <em>Ian Carroll</em></p>
+
+<p class="ToS"><a href="#/slides/title">Top of Section</a></p>
+
+<hr />
+
+<p><a name="/slides/rest"></a></p>
+
+<h2 id="structured-data-not-data-structures">Structured Data (not “data structures”)</h2>
+
+<p>Structured data is a collection of multiple observations, each composed of one or more variables – so far we have only delt with structured data.</p>
+
+<p>Key to structure: information comes in well-defined variables, i.e. the columns of our tidy tabular data.</p>
+
+<!--split-->
+
+<h2 id="well-defined-variables">Well-defined variables</h2>
+
+<p class="captioned"><img src="/text-mining-lesson/images/variable.png" alt="" width="30%" /><br />
+<em>Cox, M. 2015. Ecology &amp; Society 20(1):63.</em></p>
+
+<!--split-->
+
+<h2 id="data-classes-not-data-types">Data Classes (not “data types”)</h2>
+
+<dl>
+  <dt>Interval (or Numeric)</dt>
+  <dd>Values are separated by meaningful intervals.</dd>
+  <dt>Ordered</dt>
+  <dd>Ordered values without “distance” between them.</dd>
+  <dt>Categorical</dt>
+  <dd>Finite set of distinct, un-ordered values.</dd>
+  <dt>Qualitative</dt>
+  <dd>Unlimited, discrete, and un-ordered possibilities.</dd>
+</dl>
+
+<!--split-->
+
+<h2 id="unstructured-data">Unstructured Data</h2>
+
+<p>Here “data” is a misnomer – we mean information that has not been carved up into variables.</p>
+
+<p>Suppose you need data on how businesses fail, so you download <a href="https://www.cs.cmu.edu/~./enron/">half a million e-mails from Enron executives</a> that preceeded the energy company’s collapse in 2001.</p>
+
+<p>Structuring the data for analysis does not mean you quantify everything, although certainly some information can be quantified.
+Rather, turning unstructured information in structured data is a process of identifying concepts, definining variables, and assigning their values (i.e. taking measurements) from the textual, audio or video content.</p>
+
+<!--split-->
+
+<p>Possible examples for variables of different classes to associate with the Enron e-mails.</p>
+
+<dl>
+  <dt>Interval / Numerical</dt>
+  <dd>e.g. timestamp, e-mail length, occurrences of a given theme</dd>
+  <dt>Ordered</dt>
+  <dd>e.g sender’s position in the company, event in process-tracing sequence</dd>
+  <dt>Categorical</dt>
+  <dd>e.g. recipient(s), sender’s department, thematic code</dd>
+  <dt>Qualitative</dt>
+  <dd>e.g. topic, greeting, sentiment</dd>
+</dl>
+
+<!--split-->
+
+<p>What distinguishes <em>qualitative</em> data from unstructured information? Remember, we’re only calling something data if it’s the measurement of a <strong>variable</strong>.</p>
+
+<ol>
+  <li>It is the measurement of a variable that relates to a defined concept</li>
+  <li>It is qualitative, i.e. categorical, un-ordered and taking any value</li>
+</ol>
+
+<p>Processing of texts, surveys, recordings, etc. into variables (whether qualitative or not), is often part of “qualitiative data analysis”.</p>
+
+<!--split-->
+
+<h2 id="help-from-a-computer">Help from a computer</h2>
+
+<ul>
+  <li>Scraping
+    <ul>
+      <li>Process digitized information (tables, texts, images, recordings) into structured data.</li>
+      <li>e.g. capture sender, date, greeting, etc. as values in a data frame.</li>
+    </ul>
+  </li>
+  <li>Text mining
+    <ul>
+      <li>Processing text on the way to producing qual/quant data (i.e. this overlaps with scraping).</li>
+      <li>e.g. bag-of-words matrix</li>
+    </ul>
+  </li>
+  <li>Coding
+    <ul>
+      <li>Annotating a document collection with shared themes, sometimes called Computer Assisted Qualitative Data Analysis (CAQDA).</li>
+      <li>e.g. manually labelling sections of each e-mail with [relational] codes/themes</li>
+    </ul>
+  </li>
+  <li>Topic modeling
+    <ul>
+      <li>Algorithmic approach to coding extensive document collections.</li>
+      <li>e.g. latent Dirichlet allocation (LDA)</li>
+    </ul>
+  </li>
+</ul>
+
+<!--split-->
+
+<h2 id="scraping">Scraping</h2>
+
+<p class="captioned"><img src="http://imgs.xkcd.com/comics/regular_expressions.png" alt="Text" title="Wait, forgot to escape a space. Wheeeeee[taptaptap]eeeeee." /><br />
+<em>by Randall Munroe / <a href="http://xkcd.com/license.html">CC BY-NC</a></em></p>
+
+<!--split-->
+
+<p>RegEx is a very flexible, and very fast, program for parsing text.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Pattern</th>
+      <th>Match</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Subject:.*</td>
+      <td><span style="color:red;">Subject: Re: TPS Reports</span></td>
+    </tr>
+    <tr>
+      <td>$[0-9,]+</td>
+      <td>The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil.</td>
+    </tr>
+    <tr>
+      <td>\b\S+@\S+\b</td>
+      <td>Send comments to <span style="color:red;">info@sesync.org</span>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Note that “" must be escaped in R, so the first pattern would be scripted as <code class="highlighter-rouge">"\\$[0-9,]+"</code>.</p>
+
+<!--split-->
+
+<div class="language-r input highlighter-rouge"><pre class="highlight"><code><span class="n">install.packages</span><span class="p">(</span><span class="n">c</span><span class="p">(</span><span class="s2">"tm"</span><span class="p">,</span> <span class="s2">"SnowballC"</span><span class="p">,</span> <span class="s2">"stringr"</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Also, download text files with a mix of structured and unstructurd information from <a href="http://sesync.us/g5">http://sesync.us/g5</a>.</p>
+
+<!--split-->
+
+<div class="language-r text-document highlighter-rouge" title="lesson-8.R"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">tm</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">SnowballC</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">stringr</span><span class="p">)</span>
+
+<span class="n">docs</span> <span class="o">&lt;-</span> <span class="n">Corpus</span><span class="p">(</span><span class="n">DirSource</span><span class="p">(</span><span class="s2">"data/texts"</span><span class="p">))</span>  <span class="c1"># Put your texts here via your file explorer/finder
+</span><span class="n">meta</span><span class="p">(</span><span class="n">docs</span><span class="p">[[</span><span class="m">1</span><span class="p">]])</span>
+</code></pre>
+</div>
+<div class="output highlighter-rouge"><pre class="highlight"><code>  author       : character(0)
+  datetimestamp: 2016-09-23 21:25:20
+  description  : character(0)
+  heading      : character(0)
+  id           : 1.txt
+  language     : en
+  origin       : character(0)
+</code></pre>
+</div>
+
+<!--split-->
+
+<div class="language-r input highlighter-rouge"><pre class="highlight"><code><span class="n">content</span><span class="p">(</span><span class="n">docs</span><span class="p">[[</span><span class="m">1</span><span class="p">]])</span>
+</code></pre>
+</div>
+<div class="output highlighter-rouge"><pre class="highlight"><code> [1] "Message-ID: &lt;4102090.1075845189404.JavaMail.evans@thyme&gt;"                    
+ [2] "Date: Mon, 14 May 2001 19:36:00 -0700 (PDT)"                                 
+ [3] "From: vmartinez@winstead.com"                                                
+ [4] "To: kenneth.lay@enron.com"                                                   
+ [5] "Subject: Request for meeting -- Subject: short speech to US Olympic Commit"  
+ [6] "\ttee 7.16-19.01"                                                            
+ [7] "Mime-Version: 1.0"                                                           
+ [8] "Content-Type: text/plain; charset=us-ascii"                                  
+ [9] "Content-Transfer-Encoding: 7bit"                                             
+[10] "X-From: Martinez, Vidal  &lt;VMartinez@winstead.com&gt;"                           
+[11] "X-To: Kenneth L. Lay (E-mail)  &lt;kenneth.lay@enron.com&gt;"                      
+[12] "X-cc: "                                                                      
+[13] "X-bcc: "                                                                     
+[14] "X-Folder: \\Lay, Kenneth\\Lay, Kenneth\\Inbox"                               
+[15] "X-Origin: LAY-K"                                                             
+[16] "X-FileName: Lay, Kenneth.pst"                                                
+[17] ""                                                                            
+[18] "Ken,"                                                                        
+[19] ""                                                                            
+[20] "Houston's bid for the 2012 Olympic Games is entering the final phase of the" 
+[21] "domestic bid process.  This summer, the United States Olympic Committee"     
+[22] "(USOC) will conduct initial site visits and evaluations of the eight U.S."   
+[23] "bid cities with the goal being to cut the number of cities to three or four."
+[24] "This cut will occur in December of this year.  The USOC will be conducting"  
+[25] "Houston's site visit July 16-19, 2001."                                      
+[26] ""                                                                            
+[27] "This site visit is critical to our ultimate success in bringing the Olympic" 
+[28] "Games to Houston.  Over the four-day period in which the USOC site"          
+[29] "evaluation team is in Houston, two days will be devoted to venue tours and"  
+[30] "presentations.  There are eight presentation topics predetermined by the"    
+[31] "USOC, one of which is International Strategy. Simply stated, this is where"  
+[32] "we show why we think Houston can win on the international level."            
+[33] ""                                                                            
+[34] "As a Port Commissioner and a board member of Houston 2012, I will be part of"
+[35] "the team that presents this section to the USOC site evaluation team.  As"   
+[36] "arguably the most identifiable international corporate leader in Houston and"
+[37] "as the Chairman of the 1990 Economic Summit and the 1992 Republican National"
+[38] "Convention, both of which you left with a positive surplus (very important"  
+[39] "to the Olympics), you are in an excellent position to discuss Houston's"     
+[40] "international status."                                                       
+[41] ""                                                                            
+[42] "George DeMontrond, Susan Bandy (the Houston 2012 Exec Director) and I would" 
+[43] "very much appreciate 15 minutes or so of your time to update you on"         
+[44] "Houston's bid efforts and discuss your potential participation in the"       
+[45] "upcoming site visit. You are our first and only choice, and I'd like the"    
+[46] "opportunity to show you how important this is for Houston. We expect the"    
+[47] "number of U.S. bid cities to be reduced to four finalists by this December"  
+[48] "as a result of these meetings.  I will call Rosalee to schedule a time for a"
+[49] "visit at your offices. All the best and I look forward to catching up with"  
+[50] "you soon. I'm attaching my bio, which details the last few years of activity"
+[51] "I've been involved with, most of which emanated from your support for me on" 
+[52] "the UH Board of Regents, the 1990 Economic Summit Host Committee, the 1992"  
+[53] "RNC Convention and later the GHP. Thank you for everything you've done for"  
+[54] "Sarah and me -- hopefully I've reciprocated by doing a good job for you each"
+[55] "time."                                                                       
+[56] ""                                                                            
+[57] "All the best, Vidal"                                                         
+[58] ""                                                                            
+[59] "Vidal G. Martinez"                                                           
+[60] "Winstead Sechrest &amp; Minick P.C."                                             
+[61] "910 Travis"                                                                  
+[62] "2400 Bank One Center"                                                        
+[63] "Houston, Texas 77002"                                                        
+[64] "E-mail: vidal@martinez.net"                                                  
+[65] "Direct Tel:  713.650.2737"                                                   
+[66] "Fax:  713.650.2400"                                                          
+[67] "Cellular:  713.705.1310"                                                     
+[68] "Mobile PDA E-mail: vidal@goamerica.net"                                      
+</code></pre>
+</div>
+
+<!--split-->
+
+<div class="language-r text-document highlighter-rouge" title="lesson-8.R"><pre class="highlight"><code><span class="n">str_match</span><span class="p">(</span><span class="n">content</span><span class="p">(</span><span class="n">docs</span><span class="p">[[</span><span class="m">1</span><span class="p">]])[</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">],</span> <span class="s1">'^From: (.*)$'</span><span class="p">)</span>
+</code></pre>
+</div>
+<div class="output highlighter-rouge"><pre class="highlight"><code>      [,1]                           [,2]                    
+ [1,] NA                             NA                      
+ [2,] NA                             NA                      
+ [3,] "From: vmartinez@winstead.com" "vmartinez@winstead.com"
+ [4,] NA                             NA                      
+ [5,] NA                             NA                      
+ [6,] NA                             NA                      
+ [7,] NA                             NA                      
+ [8,] NA                             NA                      
+ [9,] NA                             NA                      
+[10,] NA                             NA                      
+</code></pre>
+</div>
+
+<!--split-->
+
+<h2 id="extract-structured-data">Extract structured data</h2>
+
+<div class="language-r text-document highlighter-rouge" title="lesson-8.R"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="k">in</span> <span class="n">seq</span><span class="p">(</span><span class="n">docs</span><span class="p">))</span> <span class="p">{</span>
+  <span class="n">match</span> <span class="o">&lt;-</span> <span class="n">str_match</span><span class="p">(</span><span class="n">content</span><span class="p">(</span><span class="n">docs</span><span class="p">[[</span><span class="n">idx</span><span class="p">]]),</span> <span class="s1">'^From: (.*)$'</span><span class="p">)</span>
+  <span class="n">from</span> <span class="o">&lt;-</span> <span class="n">match</span><span class="p">[</span><span class="o">!</span><span class="n">is.na</span><span class="p">(</span><span class="n">match</span><span class="p">[,</span> <span class="m">1</span><span class="p">]),</span> <span class="m">2</span><span class="p">]</span>
+  <span class="n">meta</span><span class="p">(</span><span class="n">docs</span><span class="p">[[</span><span class="n">idx</span><span class="p">]],</span> <span class="s2">"author"</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="n">from</span><span class="p">[[</span><span class="m">1</span><span class="p">]]</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="language-r input highlighter-rouge"><pre class="highlight"><code><span class="n">meta</span><span class="p">(</span><span class="n">docs</span><span class="p">[[</span><span class="m">1</span><span class="p">]])</span>
+</code></pre>
+</div>
+<div class="output highlighter-rouge"><pre class="highlight"><code>  author       : vmartinez@winstead.com
+  datetimestamp: 2016-09-23 21:25:20
+  description  : character(0)
+  heading      : character(0)
+  id           : 1.txt
+  language     : en
+  origin       : character(0)
+</code></pre>
+</div>
+
+<!--split-->
+
+<h2 id="text-mining">Text mining</h2>
+
+<p>Extracting measurements of quantitative varialbes from unstructured information is the “field-work” component of research projects that rely on texts for empirical observations.</p>
+
+<ul>
+  <li>Searching strings for patterns.</li>
+  <li>Cleaning documents of un-informative strings.</li>
+  <li>Quantifying string occurrences and associations.</li>
+</ul>
+
+<!--split-->
+
+<h2 id="isolate-the-unstructured-information">Isolate the unstructured information</h2>
+
+<div class="language-r text-document highlighter-rouge" title="lesson-8.R"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="k">in</span> <span class="n">seq</span><span class="p">(</span><span class="n">docs</span><span class="p">))</span> <span class="p">{</span>
+  <span class="n">header_last</span> <span class="o">&lt;-</span> <span class="n">str_match</span><span class="p">(</span><span class="n">content</span><span class="p">(</span><span class="n">docs</span><span class="p">[[</span><span class="n">idx</span><span class="p">]]),</span> <span class="s1">'^X-FileName:'</span><span class="p">)</span>
+  <span class="n">header_last_idx</span> <span class="o">&lt;-</span> <span class="n">which</span><span class="p">(</span><span class="o">!</span><span class="n">is.na</span><span class="p">(</span><span class="n">header_last</span><span class="p">))</span>
+  <span class="n">header_last_idx</span> <span class="o">&lt;-</span> <span class="n">header_last_idx</span><span class="p">[[</span><span class="m">1</span><span class="p">]]</span>
+  <span class="n">content</span><span class="p">(</span><span class="n">docs</span><span class="p">[[</span><span class="n">idx</span><span class="p">]])</span> <span class="o">&lt;-</span> <span class="n">content</span><span class="p">(</span><span class="n">docs</span><span class="p">[[</span><span class="n">idx</span><span class="p">]])[</span><span class="o">-</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="n">header_last_idx</span><span class="p">)]</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<!--split-->
+
+<h2 id="functions-for-cleaning-strings">Functions for cleaning strings</h2>
+
+<div class="language-r text-document highlighter-rouge" title="lesson-8.R"><pre class="highlight"><code><span class="n">docs</span> <span class="o">&lt;-</span> <span class="n">tm_map</span><span class="p">(</span><span class="n">docs</span><span class="p">,</span> <span class="n">removePunctuation</span><span class="p">)</span>
+
+<span class="n">docs</span> <span class="o">&lt;-</span> <span class="n">tm_map</span><span class="p">(</span><span class="n">docs</span><span class="p">,</span> <span class="n">removeNumbers</span><span class="p">)</span>
+
+<span class="n">docs</span> <span class="o">&lt;-</span> <span class="n">tm_map</span><span class="p">(</span><span class="n">docs</span><span class="p">,</span> <span class="n">content_transformer</span><span class="p">(</span><span class="n">tolower</span><span class="p">))</span>
+
+<span class="n">docs</span> <span class="o">&lt;-</span> <span class="n">tm_map</span><span class="p">(</span><span class="n">docs</span><span class="p">,</span> <span class="n">removeWords</span><span class="p">,</span> <span class="n">stopwords</span><span class="p">(</span><span class="s2">"english"</span><span class="p">))</span>
+
+<span class="n">docs</span> <span class="o">&lt;-</span> <span class="n">tm_map</span><span class="p">(</span><span class="n">docs</span><span class="p">,</span> <span class="n">removeWords</span><span class="p">,</span> <span class="n">c</span><span class="p">(</span><span class="s2">"department"</span><span class="p">,</span> <span class="s2">"email"</span><span class="p">))</span>
+
+<span class="n">docs</span> <span class="o">&lt;-</span> <span class="n">tm_map</span><span class="p">(</span><span class="n">docs</span><span class="p">,</span> <span class="n">stemDocument</span><span class="p">)</span>
+
+<span class="n">docs</span> <span class="o">&lt;-</span> <span class="n">tm_map</span><span class="p">(</span><span class="n">docs</span><span class="p">,</span> <span class="n">stripWhitespace</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<!--split-->
+
+<h2 id="create-bag-of-words-matrix">Create Bag-Of-Words Matrix</h2>
+
+<div class="language-r text-document highlighter-rouge" title="lesson-8.R"><pre class="highlight"><code><span class="n">dtm</span> <span class="o">&lt;-</span> <span class="n">DocumentTermMatrix</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span>
+<span class="n">inspect</span><span class="p">(</span><span class="n">dtm</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">])</span>
+</code></pre>
+</div>
+<div class="output highlighter-rouge"><pre class="highlight"><code>&lt;&lt;DocumentTermMatrix (documents: 5, terms: 10)&gt;&gt;
+Non-/sparse entries: 0/50
+Sparsity           : 100%
+Maximal term length: 26
+Weighting          : term frequency (tf)
+
+          Terms
+Docs       aacddacadbccbbdfdhcppdqnet aacrncieortc aaikinhoustonorg
+  1.txt                             0            0                0
+  10.txt                            0            0                0
+  100.txt                           0            0                0
+  1001.txt                          0            0                0
+  1002.txt                          0            0                0
+          Terms
+Docs       aaimmgm aama aanstoo aanstoosaliceenroncom aapl aarhus aaron
+  1.txt          0    0       0                     0    0      0     0
+  10.txt         0    0       0                     0    0      0     0
+  100.txt        0    0       0                     0    0      0     0
+  1001.txt       0    0       0                     0    0      0     0
+  1002.txt       0    0       0                     0    0      0     0
+</code></pre>
+</div>
+
+<!--split-->
+
+<div class="language-r text-document highlighter-rouge" title="lesson-8.R"><pre class="highlight"><code><span class="n">dense_dtm</span> <span class="o">&lt;-</span> <span class="n">removeSparseTerms</span><span class="p">(</span><span class="n">dtm</span><span class="p">,</span> <span class="m">1</span> <span class="o">-</span> <span class="m">10</span> <span class="o">/</span> <span class="n">length</span><span class="p">(</span><span class="n">docs</span><span class="p">))</span>
+<span class="n">inspect</span><span class="p">(</span><span class="n">dense_dtm</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">])</span>
+</code></pre>
+</div>
+<div class="output highlighter-rouge"><pre class="highlight"><code>&lt;&lt;DocumentTermMatrix (documents: 5, terms: 10)&gt;&gt;
+Non-/sparse entries: 2/48
+Sparsity           : 96%
+Maximal term length: 7
+Weighting          : term frequency (tf)
+
+          Terms
+Docs       abil abl abraham absenc absolut abus academ acceler accept
+  1.txt       0   0       0      0       0    0      0       0      0
+  10.txt      0   0       0      0       0    0      0       0      0
+  100.txt     0   0       0      0       0    0      0       0      0
+  1001.txt    0   0       0      0       0    0      0       0      1
+  1002.txt    0   0       0      0       0    0      0       0      0
+          Terms
+Docs       access
+  1.txt         0
+  10.txt        0
+  100.txt       0
+  1001.txt      4
+  1002.txt      0
+</code></pre>
+</div>
+
+<!--split-->
+
+<div class="language-r text-document highlighter-rouge" title="lesson-8.R"><pre class="highlight"><code><span class="n">freq</span> <span class="o">&lt;-</span> <span class="n">findFreqTerms</span><span class="p">(</span><span class="n">dtm</span><span class="p">,</span> <span class="m">360</span><span class="p">)</span>
+<span class="n">freq</span>
+</code></pre>
+</div>
+<div class="output highlighter-rouge"><pre class="highlight"><code> [1] "also"                         "bit"                         
+ [3] "board"                        "busi"                        
+ [5] "call"                         "can"                         
+ [7] "center"                       "charsetusascii"              
+ [9] "compani"                      "contenttransferencod"        
+[11] "contenttyp"                   "date"                        
+[13] "day"                          "develop"                     
+[15] "employe"                      "energi"                      
+[17] "enron"                        "get"                         
+[19] "help"                         "houston"                     
+[21] "inform"                       "issu"                        
+[23] "javamailevansthym"            "john"                        
+[25] "just"                         "ken"                         
+[27] "kenneth"                      "kennethinbox"                
+[29] "kennethlayenroncom"           "kennethlaymarlay"            
+[31] "klay"                         "klayenroncom"                
+[33] "know"                         "lay"                         
+[35] "layk"                         "like"                        
+[37] "make"                         "manag"                       
+[39] "mani"                         "mark"                        
+[41] "market"                       "may"                         
+[43] "meet"                         "messag"                      
+[45] "messageid"                    "mimevers"                    
+[47] "need"                         "new"                         
+[49] "nonprivilegedinbox"           "nonprivilegedpst"            
+[51] "now"                          "oct"                         
+[53] "oenronounacnrecipientscnklay" "offic"                       
+[55] "one"                          "pdt"                         
+[57] "peopl"                        "pleas"                       
+[59] "power"                        "provid"                      
+[61] "pst"                          "receiv"                      
+[63] "report"                       "see"                         
+[65] "sent"                         "servic"                      
+[67] "subject"                      "take"                        
+[69] "textplain"                    "thank"                       
+[71] "time"                         "use"                         
+[73] "want"                         "will"                        
+[75] "work"                         "xbcc"                        
+[77] "xcc"                          "xfilenam"                    
+[79] "xfolder"                      "xfrom"                       
+[81] "xorigin"                      "xto"                         
+[83] "year"                        
+</code></pre>
+</div>
+
+<!--split-->
+
+<h2 id="associations">Associations</h2>
+
+<div class="language-r text-document highlighter-rouge" title="lesson-8.R"><pre class="highlight"><code><span class="n">assoc</span> <span class="o">&lt;-</span> <span class="n">findAssocs</span><span class="p">(</span><span class="n">dtm</span><span class="p">,</span> <span class="s2">"houston"</span><span class="p">,</span> <span class="m">0.5</span><span class="p">)</span>
+<span class="n">assoc</span>
+</code></pre>
+</div>
+<div class="output highlighter-rouge"><pre class="highlight"><code>$houston
+                            center                    hgeeharrygeecom 
+                              0.54                               0.54 
+                             medic               phobbygenesisparkcom 
+                              0.54                               0.54 
+                              texa                          methodist 
+                              0.54                               0.53 
+                               gee                             regent 
+                              0.52                               0.51 
+                           smalley                brendajblackfemagov 
+                              0.51                               0.50 
+                brentkinguthtmcedu                      custocoaircom 
+                              0.50                               0.50 
+               dwangmetrobanknacom                      jlynchslehcom 
+                              0.50                               0.50 
+         jporrettadminhscuthtmcedu                      laurapflfwcom 
+                              0.50                               0.50 
+                 mariamicompctrcom                  mdebakeybcmtmcedu 
+                              0.50                               0.50 
+mdesvigneskendrickcityofhoustonnet                    mhalboutyaolcom 
+                              0.50                               0.50 
+                    nrapoportuhedu                 skarffsphuthtmcedu 
+                              0.50                               0.50 
+             thomashorvathmedvagov 
+                              0.50 
+</code></pre>
+</div>
+
+<div class="language-r text-document highlighter-rouge" title="lesson-8.R"><pre class="highlight"><code><span class="n">cor</span><span class="p">(</span><span class="n">as.matrix</span><span class="p">(</span><span class="n">dtm</span><span class="p">[,</span> <span class="n">c</span><span class="p">(</span><span class="s2">"houston"</span><span class="p">,</span> <span class="s2">"anderson"</span><span class="p">)]))</span>
+</code></pre>
+</div>
+<div class="output highlighter-rouge"><pre class="highlight"><code>           houston  anderson
+houston  1.0000000 0.4641603
+anderson 0.4641603 1.0000000
+</code></pre>
+</div>
+
+<!--split-->
+
+<h2 id="content-analysis">Content analysis</h2>
+
+<dl>
+  <dt>RQDA</dt>
+  <dd>A GUI tool (like NVivo, Atlas.ti) to assist manual coding of text.</dd>
+</dl>
+
+<!--split-->
+
+<h2 id="topic-modeling">Topic modeling</h2>
+
+<p>This involves machine learning. We have not found an R package yet that has good turnkey algorithms for topic modeling.</p>
+
+<!--split-->
+
+<h2 id="analysis-of-qualitative-data">Analysis of Qualitative Data</h2>
+
+<p>Methods of analysis for qualitative data – as defined in this lesson – fall outside the scope of machine learning tools we are familiar with. In the future, we hope to address vizualization tools for qualitative data and are learning about relavant analytical methods.</p>
+
+<p>“Analysis is the process of describing and then making inferences based on a set of data. To make an inference means to combine data with something else, say a set of assumptions or theories or more general knowledge, and draw a conclusion that goes beyond what the data themselves present.” ~ Cox, M. 2015.</p>
+
+<p class="ToS"><a href="#/slides/rest">Top of Section</a></p>
+
+<hr />
+
+
+      </div>
+    </div>
+
+  </body>
+
+</html>
