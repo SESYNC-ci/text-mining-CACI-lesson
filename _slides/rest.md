@@ -98,9 +98,9 @@ RegEx is a very flexible, and very fast, program for parsing text.
 
 | Pattern     | Match                                                                 |
 |-------------+-----------------------------------------------------------------------|
-| Subject:.\* | <span style="color:red;">Subject: Re: TPS Reports</span>              |
-| \$[0-9,]+   | The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil. |
-| \b\S+@\S+\b | Send comments to <span style="color:red;">info@sesync.org</span>.     |
+| Subject:.\*  | <span style="color:red;">Subject: Re: TPS Reports</span>              |
+| \\$[0-9,]+   | The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil. |
+| \b\S+@\S+\b  | Send comments to <span style="color:red;">info@sesync.org</span>.     |
 
 Note that "\" must be escaped in R, so the first pattern would be scripted as `"\\$[0-9,]+"`.
 
@@ -128,7 +128,7 @@ meta(docs[[1]])
 {:.text-document title="lesson-8.R"}
 ~~~
   author       : character(0)
-  datetimestamp: 2016-09-23 21:25:20
+  datetimestamp: 2016-09-26 19:16:09
   description  : character(0)
   heading      : character(0)
   id           : 1.txt
@@ -259,7 +259,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : vmartinez@winstead.com
-  datetimestamp: 2016-09-23 21:25:20
+  datetimestamp: 2016-09-26 19:16:09
   description  : character(0)
   heading      : character(0)
   id           : 1.txt
