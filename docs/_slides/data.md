@@ -72,8 +72,8 @@ Processing of texts, surveys, recordings, etc. into variables (whether qualitati
 ## Help from a computer
 
 - Scraping
-  - Process digitized information (tables, texts, images, recordings) into structured data.
-  - e.g. capture sender, date, greeting, etc. as values in a data frame.
+  - Process digitized information (websites, texts, images, recordings) into structured data.
+  - e.g. capture sender, date, and greeting from a batch of e-mails as variables in a data frame.
 - Text mining
   - Processing text on the way to producing qual/quant data (i.e. this overlaps with scraping).
   - e.g. bag-of-words matrix
@@ -83,3 +83,5 @@ Processing of texts, surveys, recordings, etc. into variables (whether qualitati
 - Topic modeling
   - Algorithmic approach to coding extensive document collections.
   - e.g. latent Dirichlet allocation (LDA)
+
+These are different ways of performing "feature engineering", which requires both domain knowledge and programing skill to link concepts with variables and create structured data from different information sources.

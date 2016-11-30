@@ -38,19 +38,24 @@ library(SnowballC)
 library(stringr)
 
 docs <- Corpus(DirSource("data/texts"))  # Put your texts here via your file explorer/finder
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
 meta(docs[[1]])
 ~~~
-
+{:.input}
 ~~~
   author       : character(0)
-  datetimestamp: 2016-11-30 14:39:52
+  datetimestamp: 2016-11-30 15:08:39
   description  : character(0)
   heading      : character(0)
   id           : 1.txt
   language     : en
   origin       : character(0)
 ~~~
-{:.text-document title="lesson-8.R"}
+{:.output}
 
 ===
 
@@ -137,7 +142,7 @@ content(docs[[1]])
 ~~~r
 str_match(content(docs[[1]])[1:10], '^From: (.*)$')
 ~~~
-
+{:.input}
 ~~~
       [,1]                           [,2]                    
  [1,] NA                             NA                      
@@ -151,7 +156,7 @@ str_match(content(docs[[1]])[1:10], '^From: (.*)$')
  [9,] NA                             NA                      
 [10,] NA                             NA                      
 ~~~
-{:.text-document title="lesson-8.R"}
+{:.output}
 
 ===
 
@@ -165,7 +170,7 @@ for (idx in seq(docs)) {
   meta(docs[[idx]], "author") <- from[[1]]
 }
 ~~~
-{:.text-document title="lesson-8.R"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
@@ -174,7 +179,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : vmartinez@winstead.com
-  datetimestamp: 2016-11-30 14:39:52
+  datetimestamp: 2016-11-30 15:08:39
   description  : character(0)
   heading      : character(0)
   id           : 1.txt

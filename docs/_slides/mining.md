@@ -22,7 +22,7 @@ for (idx in seq(docs)) {
   content(docs[[idx]]) <- content(docs[[idx]])[-(1:header_last_idx)]
 }
 ~~~
-{:.text-document title="lesson-8.R"}
+{:.text-document title="{{ site.handouts }}"}
 
 ===
 
@@ -31,20 +31,14 @@ for (idx in seq(docs)) {
 
 ~~~r
 docs <- tm_map(docs, removePunctuation)
-
 docs <- tm_map(docs, removeNumbers)
-
 docs <- tm_map(docs, content_transformer(tolower))
-
 docs <- tm_map(docs, removeWords, stopwords("english"))
-
 docs <- tm_map(docs, removeWords, c("department", "email"))
-
 docs <- tm_map(docs, stemDocument)
-
 docs <- tm_map(docs, stripWhitespace)
 ~~~
-{:.text-document title="lesson-8.R"}
+{:.text-document title="{{ site.handouts }}"}
 
 ===
 
@@ -53,9 +47,14 @@ docs <- tm_map(docs, stripWhitespace)
 
 ~~~r
 dtm <- DocumentTermMatrix(docs)
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
 inspect(dtm[1:5, 1:10])
 ~~~
-
+{:.input}
 ~~~
 <<DocumentTermMatrix (documents: 5, terms: 10)>>
 Non-/sparse entries: 0/50
@@ -78,16 +77,21 @@ Docs       aaimmgm aama aanstoo aanstoosaliceenroncom aapl aarhus aaron
   1001.txt       0    0       0                     0    0      0     0
   1002.txt       0    0       0                     0    0      0     0
 ~~~
-{:.text-document title="lesson-8.R"}
+{:.output}
 
 ===
 
 
 ~~~r
 dense_dtm <- removeSparseTerms(dtm, 1 - 10 / length(docs))
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
 inspect(dense_dtm[1:5, 1:10])
 ~~~
-
+{:.input}
 ~~~
 <<DocumentTermMatrix (documents: 5, terms: 10)>>
 Non-/sparse entries: 2/48
@@ -110,16 +114,21 @@ Docs       access
   1001.txt      4
   1002.txt      0
 ~~~
-{:.text-document title="lesson-8.R"}
+{:.output}
 
 ===
 
 
 ~~~r
 freq <- findFreqTerms(dtm, 360)
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
 freq
 ~~~
-
+{:.input}
 ~~~
  [1] "also"                         "bit"                         
  [3] "board"                        "busi"                        
@@ -164,7 +173,7 @@ freq
 [81] "xorigin"                      "xto"                         
 [83] "year"                        
 ~~~
-{:.text-document title="lesson-8.R"}
+{:.output}
 
 ===
 
@@ -173,9 +182,14 @@ freq
 
 ~~~r
 assoc <- findAssocs(dtm, "houston", 0.5)
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
 assoc
 ~~~
-
+{:.input}
 ~~~
 $houston
                             center                    hgeeharrygeecom 
@@ -203,16 +217,16 @@ mdesvigneskendrickcityofhoustonnet                    mhalboutyaolcom
              thomashorvathmedvagov 
                               0.50 
 ~~~
-{:.text-document title="lesson-8.R"}
+{:.output}
 
 
 ~~~r
 cor(as.matrix(dtm[, c("houston", "anderson")]))
 ~~~
-
+{:.input}
 ~~~
            houston  anderson
 houston  1.0000000 0.4641603
 anderson 0.4641603 1.0000000
 ~~~
-{:.text-document title="lesson-8.R"}
+{:.output}

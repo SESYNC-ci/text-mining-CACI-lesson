@@ -29,7 +29,7 @@ Also, download text files with a mix of structured and unstructurd information f
 
 ===
 
-```{r, message=FALSE, title="{{ site.handouts }}"}
+```{r, message=FALSE, title="{{ site.worksheet }}"}
 library(tm)
 library(SnowballC)
 library(stringr)
@@ -57,7 +57,7 @@ str_match(content(docs[[1]])[1:10], '^From: (.*)$')
 
 ## Extract structured data
 
-```{r, title="{{ site.handouts }}"}
+```{r, title="{{ site.worksheet }}"}
 for (idx in seq(docs)) {
   match <- str_match(content(docs[[idx]]), '^From: (.*)$')
   from <- match[!is.na(match[, 1]), 2]

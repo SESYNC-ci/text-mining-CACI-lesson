@@ -13,7 +13,7 @@ Extracting measurements of quantitative varialbes from unstructured information 
 
 ## Isolate the unstructured information
 
-```{r, eval=FALSE, title="{{ site.handouts }}"}
+```{r, eval=FALSE, title="{{ site.worksheet }}"}
 for (idx in seq(docs)) {
   header_last <- str_match(content(docs[[idx]]), '^X-FileName:')
   header_last_idx <- which(!is.na(header_last))
@@ -26,7 +26,7 @@ for (idx in seq(docs)) {
 
 ## Functions for cleaning strings
 
-```{r, title="{{ site.handouts }}"}
+```{r, title="{{ site.worksheet }}"}
 docs <- tm_map(docs, removePunctuation)
 docs <- tm_map(docs, removeNumbers)
 docs <- tm_map(docs, content_transformer(tolower))
@@ -40,7 +40,7 @@ docs <- tm_map(docs, stripWhitespace)
 
 ## Create Bag-Of-Words Matrix
 
-```{r, title="{{ site.handouts }}"}
+```{r, title="{{ site.worksheet }}"}
 dtm <- DocumentTermMatrix(docs)
 ```
 
@@ -50,7 +50,7 @@ inspect(dtm[1:5, 1:10])
 
 ===
 
-```{r, title = "{{ site.handouts }}"}
+```{r, title = "{{ site.worksheet }}"}
 dense_dtm <- removeSparseTerms(dtm, 1 - 10 / length(docs))
 ```
 
@@ -60,7 +60,7 @@ inspect(dense_dtm[1:5, 1:10])
 
 ===
 
-```{r, title="{{ site.handouts }}"}
+```{r, title="{{ site.worksheet }}"}
 freq <- findFreqTerms(dtm, 360)
 ```
 
@@ -72,7 +72,7 @@ freq
 
 ## Associations
 
-```{r, title="{{ site.handouts }}"}
+```{r, title="{{ site.worksheet }}"}
 assoc <- findAssocs(dtm, "houston", 0.5)
 ```
 
