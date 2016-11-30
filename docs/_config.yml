@@ -1,8 +1,22 @@
 # Site
 
+title: "Qualitative Data"
+handouts: worksheet.R
+tag: v0.0
+instructor: Ian Carroll
+authors:
+ - Ian Carroll
+lesson: 8
+
 # Slides
 
 slide_sorter:
+  - data
+  - scraping
+  - mining
+  - content
+  - topic
+  - conclude
 
 #####################################
 # Only modify content above or risk #

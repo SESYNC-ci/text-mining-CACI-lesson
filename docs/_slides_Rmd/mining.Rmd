@@ -1,0 +1,81 @@
+---
+---
+
+## Text mining
+
+Extracting measurements of quantitative varialbes from unstructured information is the "field-work" component of research projects that rely on texts for empirical observations.
+
+- Searching strings for patterns.
+- Cleaning documents of un-informative strings.
+- Quantifying string occurrences and associations.
+
+===
+
+## Isolate the unstructured information
+
+```{r eval = FALSE, title = "lesson-8.R"}
+for (idx in seq(docs)) {
+  header_last <- str_match(content(docs[[idx]]), '^X-FileName:')
+  header_last_idx <- which(!is.na(header_last))
+  header_last_idx <- header_last_idx[[1]]
+  content(docs[[idx]]) <- content(docs[[idx]])[-(1:header_last_idx)]
+}
+```
+
+===
+
+## Functions for cleaning strings
+
+```{r title = "lesson-8.R"}
+
+docs <- tm_map(docs, removePunctuation)
+
+docs <- tm_map(docs, removeNumbers)
+
+docs <- tm_map(docs, content_transformer(tolower))
+
+docs <- tm_map(docs, removeWords, stopwords("english"))
+
+docs <- tm_map(docs, removeWords, c("department", "email"))
+
+docs <- tm_map(docs, stemDocument)
+
+docs <- tm_map(docs, stripWhitespace)
+
+```
+
+===
+
+## Create Bag-Of-Words Matrix
+
+```{r title = "lesson-8.R"}
+dtm <- DocumentTermMatrix(docs)
+inspect(dtm[1:5, 1:10])
+```
+
+===
+
+```{r title = "lesson-8.R"}
+dense_dtm <- removeSparseTerms(dtm, 1 - 10 / length(docs))
+inspect(dense_dtm[1:5, 1:10])
+```
+
+===
+
+```{r title = "lesson-8.R"}
+freq <- findFreqTerms(dtm, 360)
+freq
+```
+
+===
+
+## Associations
+
+```{r title = "lesson-8.R"}
+assoc <- findAssocs(dtm, "houston", 0.5)
+assoc
+```
+
+```{r title = "lesson-8.R"}
+cor(as.matrix(dtm[, c("houston", "anderson")]))
+```

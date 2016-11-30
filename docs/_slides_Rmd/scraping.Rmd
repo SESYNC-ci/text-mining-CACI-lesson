@@ -1,0 +1,67 @@
+---
+---
+
+## Scraping
+
+![Text](http://imgs.xkcd.com/comics/regular_expressions.png "Wait, forgot to escape a space. Wheeeeee[taptaptap]eeeeee.")  
+*by Randall Munroe / [CC BY-NC](http://xkcd.com/license.html)*
+{:.captioned}
+
+===
+
+RegEx is a very flexible, and very fast, program for parsing text.
+
+| Pattern     | Match                                                                 |
+|-------------+-----------------------------------------------------------------------|
+| Subject:.\*  | <span style="color:red;">Subject: Re: TPS Reports</span>              |
+| \\$[0-9,]+   | The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil. |
+| \b\S+@\S+\b  | Send comments to <span style="color:red;">info@sesync.org</span>.     |
+
+Note that "\\" must be escaped in R, so the first pattern would be scripted as `"\\$[0-9,]+"`.
+
+===
+
+```{r eval = FALSE}
+install.packages(c("tm", "SnowballC", "stringr"))
+```
+
+Also, download text files with a mix of structured and unstructurd information from <http://sesync.us/g5>.
+
+===
+
+```{r message = FALSE, title = "lesson-8.R"}
+library(tm)
+library(SnowballC)
+library(stringr)
+
+docs <- Corpus(DirSource("data/texts"))  # Put your texts here via your file explorer/finder
+meta(docs[[1]])
+```
+
+===
+
+```{r}
+content(docs[[1]])
+```
+
+===
+
+```{r title = "lesson-8.R"}
+str_match(content(docs[[1]])[1:10], '^From: (.*)$')
+```
+
+===
+
+## Extract structured data
+
+```{r title = "lesson-8.R"}
+for (idx in seq(docs)) {
+  match <- str_match(content(docs[[idx]]), '^From: (.*)$')
+  from <- match[!is.na(match[, 1]), 2]
+  meta(docs[[idx]], "author") <- from[[1]]
+}
+```
+
+```{r}
+meta(docs[[1]])
+```

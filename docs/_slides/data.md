@@ -66,3 +66,20 @@ What distinguishes *qualitative* data from unstructured information? Remember, w
 1. It is qualitative, i.e. categorical, un-ordered and taking any value
 
 Processing of texts, surveys, recordings, etc. into variables (whether qualitative or not), is often part of "qualitiative data analysis".
+
+===
+
+## Help from a computer
+
+- Scraping
+  - Process digitized information (tables, texts, images, recordings) into structured data.
+  - e.g. capture sender, date, greeting, etc. as values in a data frame.
+- Text mining
+  - Processing text on the way to producing qual/quant data (i.e. this overlaps with scraping).
+  - e.g. bag-of-words matrix
+- Coding
+  - Annotating a document collection with shared themes, sometimes called Computer Assisted Qualitative Data Analysis (CAQDA).
+  - e.g. manually labelling sections of each e-mail with [relational] codes/themes 
+- Topic modeling
+  - Algorithmic approach to coding extensive document collections.
+  - e.g. latent Dirichlet allocation (LDA)
