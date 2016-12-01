@@ -5,9 +5,9 @@
 
 Extracting measurements of quantitative varialbes from unstructured information is the "field-work" component of research projects that rely on texts for empirical observations.
 
-- Searching strings for patterns.
-- Cleaning documents of un-informative strings.
-- Quantifying string occurrences and associations.
+- Searching strings for patterns
+- Cleaning documents of un-informative strings
+- Quantifying string occurrences and associations
 
 ===
 
