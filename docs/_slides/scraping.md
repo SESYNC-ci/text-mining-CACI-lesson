@@ -48,7 +48,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : character(0)
-  datetimestamp: 2016-11-30 15:08:39
+  datetimestamp: 2016-12-01 20:41:31
   description  : character(0)
   heading      : character(0)
   id           : 1.txt
@@ -179,7 +179,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : vmartinez@winstead.com
-  datetimestamp: 2016-11-30 15:08:39
+  datetimestamp: 2016-12-01 20:41:31
   description  : character(0)
   heading      : character(0)
   id           : 1.txt

@@ -11,12 +11,12 @@ lesson: 8
 # Slides
 
 slide_sorter:
-  - data
-  - scraping
-  - mining
-  - content
-  - topic
-  - conclude
+  - data.md
+  - scraping.Rmd
+  - mining.Rmd
+  - content.md
+  - topic.md
+  - conclude.md
 
 #####################################
 # Only modify content above or risk #
