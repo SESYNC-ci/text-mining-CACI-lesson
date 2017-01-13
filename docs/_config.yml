@@ -1,4 +1,11 @@
-# Site
+# Lesson
+
+title:
+handouts:
+tag:
+lesson:
+instructor:
+authors:
 
 title: "Unstructured and Qualitative Data"
 handouts: worksheet.R
@@ -25,7 +32,7 @@ slide_sorter:
 
 # Style
 
-styleurl: https://cdn.rawgit.com/sesync-ci/lesson-style/1.0.1
+styleurl: https://cdn.rawgit.com/sesync-ci/lesson-style/1.1/docs
 reveal: https://cdn.rawgit.com/hakimel/reveal.js/3.3.0
 
 # Jekyll
