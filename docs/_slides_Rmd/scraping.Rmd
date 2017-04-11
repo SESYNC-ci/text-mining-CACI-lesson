@@ -3,7 +3,7 @@
 
 ## Scraping
 
-![Text](http://imgs.xkcd.com/comics/regular_expressions.png "Wait, forgot to escape a space. Wheeeeee[taptaptap]eeeeee.")  
+![Text](https://imgs.xkcd.com/comics/regular_expressions.png "Wait, forgot to escape a space. Wheeeeee[taptaptap]eeeeee.")  
 *by Randall Munroe / [CC BY-NC](http://xkcd.com/license.html)*
 {:.captioned}
 

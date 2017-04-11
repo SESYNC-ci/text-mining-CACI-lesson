@@ -49,7 +49,7 @@ dim(edgelist)
 
 The **network** package provides convenient tools for working with relational data.
 
-```{r, title="{{ site.handouts }}"}
+```{r network_graph, results='hide', message=FALSE, title="{{ site.handouts }}"}
 library(network)
 
 g <- network(edgelist)
@@ -62,7 +62,7 @@ Question
 : Is a network qualitative or quantitative data?
 
 Answer
-: It certainly doesn't fall into line with traditional statistical methods, but the variables involved are categorical. Methods for fitting models on networks (e.g. ERGMs) are an active research area.
+: {:.fragment} It certainly doesn't fall into line with traditional statistical methods, but the variables involved are categorical. Methods for fitting models on networks (e.g. ERGMs) are an active research area.
 
 ===
 

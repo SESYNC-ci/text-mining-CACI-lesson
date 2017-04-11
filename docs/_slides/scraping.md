@@ -3,7 +3,7 @@
 
 ## Scraping
 
-![Text](http://imgs.xkcd.com/comics/regular_expressions.png "Wait, forgot to escape a space. Wheeeeee[taptaptap]eeeeee.")  
+![Text](https://imgs.xkcd.com/comics/regular_expressions.png "Wait, forgot to escape a space. Wheeeeee[taptaptap]eeeeee.")  
 *by Randall Munroe / [CC BY-NC](http://xkcd.com/license.html)*
 {:.captioned}
 
@@ -39,7 +39,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : character(0)
-  datetimestamp: 2017-04-11 05:30:42
+  datetimestamp: 2017-04-11 14:17:01
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -147,7 +147,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : dutch.quigley@enron.com
-  datetimestamp: 2017-04-11 05:30:42
+  datetimestamp: 2017-04-11 14:17:01
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt

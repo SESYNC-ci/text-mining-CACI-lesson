@@ -36,7 +36,7 @@ Qustion
 : What is one example of each of the three types of quantitative data (interval, ordered, and categorical) a biological survey might produce?
 
 Answer
-: For example, a fisheries survey might record size, age class (juvenile, adult), and species.
+: {:.fragment} For example, a fisheries survey might record size, age class (juvenile, adult), and species.
 
 ===
 
@@ -44,7 +44,7 @@ Qustion
 : What is an example of qualitative data the same biological survey might collect?
 
 Answer
-: Surveys often collect descriptive data, e.g. description of micro-habitat where an organism was found.
+: {:.fragment} Surveys often collect descriptive data, e.g. description of micro-habitat where an organism was found.
 
 ===
 
@@ -61,20 +61,15 @@ Information that has not been carved up into variables is unstructured "data" --
 Suppose you want to collect data on how businesses fail, so you download [half a million e-mails from Enron executives](https://www.cs.cmu.edu/~./enron/) that preceeded the energy company's collapse in 2001.
 
 ~~~
-Message-ID: <2108779.1075845194830.JavaMail.evans@thyme>
-Date: Thu, 7 Jun 2001 14:08:12 -0700 (PDT)
-From: a..hughes@enron.com
-To: jeff.skilling@enron.com, kenneth.lay@enron.com
-Subject: Quicksilver Resources
-Cc: rebecca.mcdonald@enron.com, james.derrick@enron.com
+Message-ID: <16986095.1075852351708.JavaMail.evans@thyme>
+Date: Mon, 3 Sep 2001 12:24:09 -0700 (PDT)
+From: greg.whalley@enron.com
+To: kenneth.lay@enron.com, j..kean@enron.com
+Subject: FW: Management Committee Offsite
 
-Ken and Jeff:
-
-Glen Darden, the President and CEO of Quicksilver Resources, Inc., is a
-longtime personal and professional friend of mine.  Recently, he has asked
-whether I would consider serving as an outside ...
+I'm sorry I haven't been more involved is setting this up, but I think the agenda looks kond of soft.  At a minimum, I would like to turn the schedule around and hit the hard subjects like Q3, risk management, and ...
 ~~~
-{:.text-document title="data/177.txt"}
+{:.text-document title="data/16986095.1075852351708.txt"}
 
 ===
 
@@ -98,8 +93,8 @@ Question
 : What distinguishes *qualitative data* from unstructured information?
 
 Answer
-: It is the measurement of a variable that relates to a well-defined concept
-: It is qualitative, i.e. categorical, un-ordered and taking any value
+: {:.fragment} It is the measurement of a variable that relates to a well-defined concept
+: {:.fragment} It is qualitative, i.e. categorical, un-ordered and taking any value
 
 Processing of texts, surveys, recordings, etc. into variables (whether qualitative or not), is often described as qualitiative data analysis.
 

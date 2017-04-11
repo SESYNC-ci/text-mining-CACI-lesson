@@ -107,6 +107,7 @@ Outliers may reduce the density of the matrix of term occurrences in each docume
 char <- sapply(clean_docs, function(x) nchar(content(x)))
 hist(log10(char))
 ```
+
 ===
 
 ```{r, title = "{{ site.handouts }}"}

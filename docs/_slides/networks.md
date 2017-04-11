@@ -80,27 +80,13 @@ The **network** package provides convenient tools for working with relational da
 
 ~~~r
 library(network)
-~~~
 
-~~~
-network: Classes for Relational Data
-Version 1.13.0 created on 2015-08-31.
-copyright (c) 2005, Carter T. Butts, University of California-Irvine
-                    Mark S. Handcock, University of California -- Los Angeles
-                    David R. Hunter, Penn State University
-                    Martina Morris, University of Washington
-                    Skye Bender-deMoll, University of Washington
- For citation information, type citation("network").
- Type help("network-package") to get started.
-~~~
-
-~~~r
 g <- network(edgelist)
 plot(g)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
-![plot of chunk unnamed-chunk-6]({{ site.baseurl }}/images/unnamed-chunk-6-1.png)
+![plot of chunk network_graph]({{ site.baseurl }}/images/network_graph-1.png)
 
 ===
 
@@ -108,7 +94,7 @@ Question
 : Is a network qualitative or quantitative data?
 
 Answer
-: It certainly doesn't fall into line with traditional statistical methods, but the variables involved are categorical. Methods for fitting models on networks (e.g. ERGMs) are an active research area.
+: {:.fragment} It certainly doesn't fall into line with traditional statistical methods, but the variables involved are categorical. Methods for fitting models on networks (e.g. ERGMs) are an active research area.
 
 ===
 

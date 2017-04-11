@@ -169,6 +169,7 @@ hist(log10(char))
 {:.text-document title="{{ site.handouts }}"}
 
 ![plot of chunk unnamed-chunk-12]({{ site.baseurl }}/images/unnamed-chunk-12-1.png)
+
 ===
 
 
@@ -245,27 +246,27 @@ terms(fit, 20)
 ~~~
 {:.input}
 ~~~
-      Topic 1    Topic 2     Topic 3      Topic 4   
- [1,] "thank"    "get"       "will"       "pleas"   
- [2,] "lynn"     "will"      "thank"      "will"    
- [3,] "want"     "can"       "know"       "need"    
- [4,] "know"     "work"      "just"       "can"     
- [5,] "let"      "look"      "lynn"       "call"    
- [6,] "call"     "agreement" "work"       "meet"    
- [7,] "like"     "need"      "can"        "ani"     
- [8,] "can"      "pleas"     "think"      "parti"   
- [9,] "think"    "enron"     "let"        "deal"    
-[10,] "need"     "ani"       "one"        "get"     
-[11,] "time"     "one"       "master"     "also"    
-[12,] "ani"      "copi"      "fyi"        "day"     
-[13,] "may"      "sure"      "see"        "let"     
-[14,] "question" "like"      "dont"       "good"    
-[15,] "make"     "know"      "blackberri" "question"
-[16,] "will"     "send"      "market"     "give"    
-[17,] "send"     "meet"      "first"      "dont"    
-[18,] "chang"    "attach"    "week"       "schedul" 
-[19,] "michell"  "time"      "fax"        "execut"  
-[20,] "get"      "america"   "good"       "offic"   
+      Topic 1   Topic 2    Topic 3      Topic 4    
+ [1,] "get"     "thank"    "will"       "agreement"
+ [2,] "think"   "lynn"     "call"       "pleas"    
+ [3,] "dont"    "pleas"    "can"        "enron"    
+ [4,] "look"    "let"      "get"        "will"     
+ [5,] "just"    "know"     "meet"       "master"   
+ [6,] "like"    "ani"      "day"        "ani"      
+ [7,] "know"    "need"     "week"       "fax"      
+ [8,] "good"    "fyi"      "time"       "know"     
+ [9,] "want"    "meet"     "take"       "need"     
+[10,] "price"   "market"   "need"       "copi"     
+[11,] "one"     "question" "give"       "servic"   
+[12,] "michell" "parti"    "talk"       "attach"   
+[13,] "work"    "john"     "like"       "send"     
+[14,] "can"     "will"     "work"       "sign"     
+[15,] "see"     "deal"     "back"       "legal"    
+[16,] "time"    "discuss"  "next"       "let"      
+[17,] "also"    "review"   "blackberri" "email"    
+[18,] "last"    "chang"    "plan"       "document" 
+[19,] "well"    "report"   "handheld"   "north"    
+[20,] "make"    "inform"   "wireless"   "receiv"   
 ~~~
 {:.output}
 
@@ -287,12 +288,12 @@ head(topics)
 ~~~
 {:.input}
 ~~~
-                            accounts   meeting      call     legal
-10001529.1075861306591.txt 0.2485370 0.2513410 0.2486368 0.2514853
-10016327.1075853078441.txt 0.2623383 0.2479206 0.2492764 0.2404648
-10025954.1075852266012.txt 0.2491494 0.2516827 0.2518948 0.2472732
-10029353.1075861906556.txt 0.2529080 0.2460397 0.2549427 0.2461097
-10042065.1075862047981.txt 0.2527563 0.2483375 0.2528981 0.2460081
-10050267.1075853166280.txt 0.2553068 0.2427648 0.2498241 0.2521043
+                             accounts   meeting       call      legal
+10001529.1075861306591.txt 0.16098087 0.3044516 0.40068674 0.13388080
+10016327.1075853078441.txt 0.12275474 0.2171879 0.63332397 0.02673338
+10025954.1075852266012.txt 0.11905991 0.6426403 0.11698138 0.12131839
+10029353.1075861906556.txt 0.09239962 0.7227994 0.09240134 0.09239962
+10042065.1075862047981.txt 0.33566818 0.1712134 0.42643694 0.06668150
+10050267.1075853166280.txt 0.04369077 0.7991363 0.12448128 0.03269166
 ~~~
 {:.output}
