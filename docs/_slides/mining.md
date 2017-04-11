@@ -21,9 +21,9 @@ Assuming the structured data in the Enron e-mail headers has been captured, stri
 for (i in seq(docs)) {
   lines <- content(docs[[i]])
   header_last <- str_match(lines, '^X-FileName:')
-  repeat_first <- str_match(lines, '--Original Message--')
   header_last <- which(!is.na(header_last))
   message_begin <- header_last[[1]] + 1
+  repeat_first <- str_match(lines, '--Original Message--')
   repeat_first <- which(!is.na(repeat_first))
   message_end <- c(repeat_first - 1, length(lines))[[1]]
   content(docs[[i]]) <- lines[message_begin:message_end]
@@ -176,7 +176,7 @@ hist(log10(char))
 ~~~r
 inlier <- function(x) {
   n <- nchar(content(x))
-  n < 10^3 && n > 10
+  n < 10^3 & n > 10
 }
 clean_docs <- tm_filter(clean_docs, inlier)
 dtm <- DocumentTermMatrix(clean_docs)
@@ -246,27 +246,27 @@ terms(fit, 20)
 ~~~
 {:.input}
 ~~~
-      Topic 1   Topic 2    Topic 3      Topic 4    
- [1,] "get"     "thank"    "will"       "agreement"
- [2,] "think"   "lynn"     "call"       "pleas"    
- [3,] "dont"    "pleas"    "can"        "enron"    
- [4,] "look"    "let"      "get"        "will"     
- [5,] "just"    "know"     "meet"       "master"   
- [6,] "like"    "ani"      "day"        "ani"      
- [7,] "know"    "need"     "week"       "fax"      
- [8,] "good"    "fyi"      "time"       "know"     
- [9,] "want"    "meet"     "take"       "need"     
-[10,] "price"   "market"   "need"       "copi"     
-[11,] "one"     "question" "give"       "servic"   
-[12,] "michell" "parti"    "talk"       "attach"   
-[13,] "work"    "john"     "like"       "send"     
-[14,] "can"     "will"     "work"       "sign"     
-[15,] "see"     "deal"     "back"       "legal"    
-[16,] "time"    "discuss"  "next"       "let"      
-[17,] "also"    "review"   "blackberri" "email"    
-[18,] "last"    "chang"    "plan"       "document" 
-[19,] "well"    "report"   "handheld"   "north"    
-[20,] "make"    "inform"   "wireless"   "receiv"   
+      Topic 1 Topic 2     Topic 3 Topic 4 
+ [1,] "meet"  "will"      "will"  "get"   
+ [2,] "thank" "thank"     "can"   "know"  
+ [3,] "like"  "pleas"     "need"  "ani"   
+ [4,] "lynn"  "question"  "thank" "thank" 
+ [5,] "can"   "let"       "know"  "pleas" 
+ [6,] "call"  "parti"     "lynn"  "email" 
+ [7,] "let"   "ani"       "send"  "will"  
+ [8,] "time"  "get"       "enron" "work"  
+ [9,] "just"  "think"     "copi"  "want"  
+[10,] "pleas" "agreement" "work"  "need"  
+[11,] "take"  "week"      "let"   "lynn"  
+[12,] "day"   "work"      "look"  "like"  
+[13,] "may"   "can"       "just"  "one"   
+[14,] "need"  "master"    "pleas" "look"  
+[15,] "make"  "time"      "price" "dont"  
+[16,] "also"  "attach"    "good"  "back"  
+[17,] "give"  "next"      "see"   "just"  
+[18,] "chang" "want"      "time"  "market"
+[19,] "new"   "net"       "group" "call"  
+[20,] "offic" "call"      "fax"   "enron" 
 ~~~
 {:.output}
 
@@ -288,12 +288,12 @@ head(topics)
 ~~~
 {:.input}
 ~~~
-                             accounts   meeting       call      legal
-10001529.1075861306591.txt 0.16098087 0.3044516 0.40068674 0.13388080
-10016327.1075853078441.txt 0.12275474 0.2171879 0.63332397 0.02673338
-10025954.1075852266012.txt 0.11905991 0.6426403 0.11698138 0.12131839
-10029353.1075861906556.txt 0.09239962 0.7227994 0.09240134 0.09239962
-10042065.1075862047981.txt 0.33566818 0.1712134 0.42643694 0.06668150
-10050267.1075853166280.txt 0.04369077 0.7991363 0.12448128 0.03269166
+                            accounts   meeting      call     legal
+10001529.1075861306591.txt 0.2498256 0.2492723 0.2504437 0.2504584
+10016327.1075853078441.txt 0.2538796 0.2414556 0.2486334 0.2560314
+10025954.1075852266012.txt 0.2500814 0.2478927 0.2499806 0.2520453
+10029353.1075861906556.txt 0.2500758 0.2497153 0.2504751 0.2497338
+10042065.1075862047981.txt 0.2539185 0.2515753 0.2499933 0.2445129
+10050267.1075853166280.txt 0.2587994 0.2449467 0.2451866 0.2510673
 ~~~
 {:.output}

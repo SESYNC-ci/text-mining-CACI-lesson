@@ -44,10 +44,11 @@ content(docs[[1]])
 
 The regex pattern `^From: .*` matches any whole line that begins with "From: ". Parentheses cause parts of the match to be captured for substitution or extraction.
 
-```{r}
+```{r, title="{{ site.handouts }}"}
 library(stringr)
 
-str_match(content(docs[[1]])[1:16], '^From: (.*)')
+txt <- content(docs[[1]])[1:16]
+str_match(txt, '^From: (.*)')
 ```
 
 ===
@@ -58,7 +59,8 @@ The `meta` object for each e-mail was sparsely populated, but some of those vari
 
 ```{r, title="{{ site.handouts }}"}
 for (i in seq(docs)) {
-  match <- str_match(content(docs[[i]]), '^From: (.*)')
+  txt <- content(docs[[i]])
+  match <- str_match(txt, '^From: (.*)')
   row <- !is.na(match[ , 1])
   from <- match[row, 2]
   meta(docs[[i]], "author") <- from[[1]]

@@ -27,7 +27,8 @@ The "To:" field is slightly harder to extract, because it may include multiple r
 
 
 ~~~r
-subject <- which(!is.na(str_match(content(doc), '^Subject:')))
+match <- str_match(content(doc), '^Subject:')
+subject <- which(!is.na(match))
 to <- paste(content(doc)[4:(subject[1] - 1)], collapse='')
 to_list <- str_extract_all(to, '\\b\\S+@\\S+\\b')
 ~~~

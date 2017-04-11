@@ -39,7 +39,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : character(0)
-  datetimestamp: 2017-04-11 14:17:01
+  datetimestamp: 2017-04-11 19:04:06
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -99,9 +99,10 @@ The regex pattern `^From: .*` matches any whole line that begins with "From: ". 
 ~~~r
 library(stringr)
 
-str_match(content(docs[[1]])[1:16], '^From: (.*)')
+txt <- content(docs[[1]])[1:16]
+str_match(txt, '^From: (.*)')
 ~~~
-{:.input}
+
 ~~~
       [,1]                            [,2]                     
  [1,] NA                              NA                       
@@ -121,7 +122,7 @@ str_match(content(docs[[1]])[1:16], '^From: (.*)')
 [15,] NA                              NA                       
 [16,] NA                              NA                       
 ~~~
-{:.output}
+{:.text-document title="{{ site.handouts }}"}
 
 ===
 
@@ -132,7 +133,8 @@ The `meta` object for each e-mail was sparsely populated, but some of those vari
 
 ~~~r
 for (i in seq(docs)) {
-  match <- str_match(content(docs[[i]]), '^From: (.*)')
+  txt <- content(docs[[i]])
+  match <- str_match(txt, '^From: (.*)')
   row <- !is.na(match[ , 1])
   from <- match[row, 2]
   meta(docs[[i]], "author") <- from[[1]]
@@ -147,7 +149,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : dutch.quigley@enron.com
-  datetimestamp: 2017-04-11 14:17:01
+  datetimestamp: 2017-04-11 19:04:06
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt

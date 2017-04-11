@@ -1,66 +1,98 @@
-library(tm)
-library(SnowballC)
+## RegEx
+
+library(...)
+library(...)
+
+docs <- ...
+
 library(stringr)
 
-## Load texts into a Corpus
+txt <- ...
+str_match(txt, '...')
 
-docs <- Corpus(DirSource("data/texts"))
-meta(docs[[1]])
-content(docs[[1]])
+## Extract structured data
 
-## Simple regex pattern matching
-
-str_match(content(docs[[1]]), '^From: (.*)$')
-
-## Update metadata with extracted string
-
-for (idx in seq(docs)) {
-  match <- str_match(content(docs[[idx]]), '^From: (.*)$')
-  from <- match[!is.na(match[, 1]), 2]
-  meta(docs[[idx]], "author") <- from[[1]]
+for (...) {
+  txt <- content(docs[[i]])
+  match <- str_match(txt, '^From: (.*)')
+  ...
+  ...
+  meta(docs[[i]], "author") <- ...
 }
+
+## Extract relational data
+
+match <- str_match(..., ...)
+subject <- ...
+to <- paste(content(doc)[4:(subject[1] - 1)], collapse='')
+to_list <- ...
+
+library(...)
+
+g <- ...
+plot(...)
 
 ## Isolate unstructured information
 
-for (idx in seq(docs)) {
-  header_last <- str_match(content(docs[[idx]]), '^X-FileName:')
-  header_last_idx <- which(!is.na(header_last))
-  header_last_idx <- header_last_idx[[1]]
-  content(docs[[idx]]) <- content(docs[[idx]])[-(1:header_last_idx)]
+for (i in seq(docs)) {
+  lines <- content(docs[[i]])
+  ...
+  ...
+  ...
+  repeat_first <- str_match(lines, '--Original Message--')
+  repeat_first <- which(!is.na(repeat_first))
+  message_end <- c(repeat_first - 1, length(lines))[[1]]
+  content(docs[[i]]) <- lines[message_begin:message_end]
+...
+
+
+## Functions for cleaning strings
+
+clean_docs <- docs
+clean_docs <- tm_map(clean_docs, ...)
+clean_docs <- tm_map(clean_docs, ...)
+clean_docs <- tm_map(clean_docs, ...)
+
+clean_docs <- tm_map(clean_docs, ...)
+
+collapse <- function(x) {
+  paste(x, collapse = '')
 }
+clean_docs <- tm_map(clean_docs, ...)  
 
-## Preprocessing
+## Stopwords and stems
 
-docs <- tm_map(docs, removePunctuation)
+clean_docs <- tm_map(clean_docs, ...)
+clean_docs <- tm_map(clean_docs, ...)
 
-docs <- tm_map(docs, removeNumbers)
+## Bag-of-Words
 
-docs <- tm_map(docs, content_transformer(tolower))
+dtm <- ...(clean_docs)
 
-docs <- tm_map(docs, removeWords, stopwords("english"))
+char <- ...(clean_docs, ...)
+...
 
-docs <- tm_map(docs, removeWords, c("department", "email"))
+inlier <- function(x) {
+  n <- ...(content(x))
+  ...
+}
+clean_docs <- tm_filter(clean_docs, ...)
+dtm <- DocumentTermMatrix(clean_docs)
+...
+...
 
-docs <- tm_map(docs, stemDocument)
+## Term correlations
 
-docs <- tm_map(docs, stripWhitespace)
+assoc <- findAssocs(dense_dtm, ..., 0.2)
 
-## Bag-of-words Quantification
 
-dtm <- DocumentTermMatrix(docs)
-inspect(dtm[1:5, 1:10])
+## Latent Dirichlet allocation
 
-dense_dtm <- removeSparseTerms(dtm, 1 - 10 / length(docs))
-inspect(dense_dtm[1:5, 1:10])
+library(...)
 
-## High frequency terms
+k = 4
+...
 
-freq <- findFreqTerms(dtm, 360)
-freq
-
-## Associations
-
-assoc <- findAssocs(dtm, "houston", 0.5)
-assoc
-
-cor(as.matrix(dtm[, c("houston", "anderson")]))
+topics <- posterior(...)...
+topics <- ...(topics)
+colnames(topics) <- ...
