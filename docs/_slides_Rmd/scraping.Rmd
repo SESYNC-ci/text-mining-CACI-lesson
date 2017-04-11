@@ -11,30 +11,23 @@
 
 RegEx is a very flexible, and very fast, program for parsing text.
 
-| Pattern     | Match                                                                 |
-|-------------+-----------------------------------------------------------------------|
-| Subject:.\*  | <span style="color:red;">Subject: Re: TPS Reports</span>              |
-| \\$[0-9,]+   | The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil. |
-| \b\S+@\S+\b  | Send comments to <span style="color:red;">info@sesync.org</span>.     |
+| Pattern      | String with <span style="color:red;">match</span>                                    |
+|--------------+--------------------------------------------------------------------------------------|
+| Subject:.\*  | <span style="color:red;">Subject: Re: TPS Reports</span>                             |
+| \\$[0-9,]+   | The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil.                |
+| \b\S+@\S+\b  | E-mail <span style="color:red;">info@sesync.org</span> or tweet @SESYNC for details! |
 
 Note that "\\" must be escaped in R, so the first pattern would be scripted as `"\\$[0-9,]+"`.
 
 ===
 
-```{r, eval=FALSE}
-install.packages(c("tm", "SnowballC", "stringr"))
-```
-
-Also, download text files with a mix of structured and unstructurd information from <http://sesync.us/g5>.
-
-===
+Continuing with the Enron e-mails theme, begin by bringing the documents into an analysis with the **tm** package.
 
 ```{r, message=FALSE, title="{{ site.handouts }}"}
 library(tm)
 library(SnowballC)
-library(stringr)
 
-docs <- Corpus(DirSource("data/texts"))  # Put your texts here via your file explorer/finder
+docs <- Corpus(DirSource("data/enron"))  # Put your texts here via your file explorer/finder
 ```
 
 ```{r}
@@ -49,18 +42,25 @@ content(docs[[1]])
 
 ===
 
+The regex pattern `^From: .*` matches any whole line that begins with "From: ". Parentheses cause parts of the match to be captured for substitution or extraction.
+
 ```{r}
-str_match(content(docs[[1]])[1:10], '^From: (.*)$')
+library(stringr)
+
+str_match(content(docs[[1]])[1:16], '^From: (.*)')
 ```
 
 ===
 
 ## Extract structured data
 
+The `meta` object for each e-mail was sparsely populated, but some of those variables can be extracted from the `content`.
+
 ```{r, title="{{ site.handouts }}"}
 for (idx in seq(docs)) {
-  match <- str_match(content(docs[[idx]]), '^From: (.*)$')
-  from <- match[!is.na(match[, 1]), 2]
+  match <- str_match(content(docs[[idx]]), '^From: (.*)')
+  row <- !is.na(match[ , 1])
+  from <- match[row, 2]
   meta(docs[[idx]], "author") <- from[[1]]
 }
 ```
