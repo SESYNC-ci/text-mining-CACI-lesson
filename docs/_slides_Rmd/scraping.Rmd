@@ -27,7 +27,7 @@ Continuing with the Enron e-mails theme, begin by bringing the documents into an
 library(tm)
 library(SnowballC)
 
-docs <- Corpus(DirSource("data/enron"))  # Put your texts here via your file explorer/finder
+docs <- Corpus(DirSource("data/enron"))
 ```
 
 ```{r}
@@ -57,11 +57,11 @@ str_match(content(docs[[1]])[1:16], '^From: (.*)')
 The `meta` object for each e-mail was sparsely populated, but some of those variables can be extracted from the `content`.
 
 ```{r, title="{{ site.handouts }}"}
-for (idx in seq(docs)) {
-  match <- str_match(content(docs[[idx]]), '^From: (.*)')
+for (i in seq(docs)) {
+  match <- str_match(content(docs[[i]]), '^From: (.*)')
   row <- !is.na(match[ , 1])
   from <- match[row, 2]
-  meta(docs[[idx]], "author") <- from[[1]]
+  meta(docs[[i]], "author") <- from[[1]]
 }
 ```
 

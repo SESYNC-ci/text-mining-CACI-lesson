@@ -1,0 +1,71 @@
+---
+---
+
+## Extracting relational data
+
+Relational data are tables that establish a relationship between entities from other tables. Suppose we have a table with a record for each unique address in the Enron e-mails, then a second table with a record for each pair of e-mail addresses that exchanged a message is relational data.
+
+```{r}
+doc <- docs[[2]]
+content(doc)[1:6]
+```
+
+===
+
+The "To:" field is slightly harder to extract, because it may include multiple recipients.
+
+```{r, title="{{ site.handouts }}"}
+subject <- which(!is.na(str_match(content(doc), '^Subject:')))
+to <- paste(content(doc)[4:(subject[1] - 1)], collapse='')
+to_list <- str_extract_all(to, '\\b\\S+@\\S+\\b')
+```
+
+```{r}
+to_list
+```
+
+===
+
+Embed the above lines in a for loop to build an edge list for the network of e-mail senders and recipients.
+
+```{r, title="{{ site.handouts }}"}
+edgelist <- NULL
+for (i in seq(docs)) {
+  doc <- docs[[i]]
+  from <- meta(doc, 'author')
+  subject <- which(!is.na(str_match(content(doc), '^Subject:')))
+  to <- paste(content(doc)[4:(subject[1] - 1)], collapse='')
+  to_list <- str_extract_all(to, '\\b\\S+@\\S+\\b')
+  edges <- t(rbind(from, to_list[[1]]))
+  edgelist <- rbind(edgelist, edges)
+}
+```
+
+```{r}
+dim(edgelist)
+```
+
+===
+
+The **network** package provides convenient tools for working with relational data.
+
+```{r, title="{{ site.handouts }}"}
+library(network)
+
+g <- network(edgelist)
+plot(g)
+```
+
+===
+
+Question
+: Is a network qualitative or quantitative data?
+
+Answer
+: It certainly doesn't fall into line with traditional statistical methods, but the variables involved are categorical. Methods for fitting models on networks (e.g. ERGMs) are an active research area.
+
+===
+
+## Scraping online
+
+Scraping websites for data that, like the addresses in the Enron e-mails, are already stored as well-defined variables is a similar process. The structured data are in there, you just have to extract it. The **httr** package can assist with downloading web page content into R as a navigable HTML document.

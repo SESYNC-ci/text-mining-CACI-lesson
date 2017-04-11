@@ -3,41 +3,80 @@
 
 ## Structured Data
 
-Structured data is a collection of multiple observations, each composed of one or more variables -- so far we have only delt with structured data.
+Structured data is a collection of multiple observations, each composed of one or more variables. Most analyses typically begin with structured data, the kind of tables you can view as a spreadhseet.
 
-Key to structure: information comes in well-defined variables, e.g. the columns of our tidy tabular data.
+The key to *structure* is that information is packaged into well-defined variables, e.g. the columns of a tidy data frame. Typically, it took someone a lot of effort to get information into a useful structure.
 
 ===
 
 ## Well-defined variables
 
 ![]({{ site.baseurl }}/images/variable.png){:width="30%"}  
-*Cox, M. 2015. Ecology & Society 20(1):63.*
+*Cox, M. 2015. Ecology & Society 20(1):63.*  
 {:.captioned}
 
 ===
 
-## Data Classes (not "data types")
+## Variable classification
 
-Interval (or Numeric)
-: Values are separated by meaningful intervals.
+A variables should fit within one of four categories, notwithstanding the additional specification of 'data types' to use when measuring a givn variable.
 
-Ordered
-: Ordered values without "distance" between them.
+| Category | Definition |
+|--
+| *Interval (or Numeric)* | Values separated by meaningful intervals |
+| *Ordered* | Ordered values without "distance" between them |
+| *Categorical* | Finite set of distinct, un-ordered values |
+| *Qualitative* | Unlimited, discrete, and un-ordered possibilities |
 
-Categorical
-: Finite set of distinct, un-ordered values.
+===
 
-Qualitative
-: Unlimited, discrete, and un-ordered possibilities.
+What we call quantitative data is actually any one of the first three.
+
+Qustion
+: What is one example of each of the three types of quantitative data (interval, ordered, and categorical) a biological survey might produce?
+
+Answer
+: For example, a fisheries survey might record size, age class (juvenile, adult), and species.
+
+===
+
+Qustion
+: What is an example of qualitative data the same biological survey might collect?
+
+Answer
+: Surveys often collect descriptive data, e.g. description of micro-habitat where an organism was found.
 
 ===
 
 ## Unstructured Data
 
-Here "data" is a misnomer -- we mean information that has not been carved up into variables.
+Information that has not been carved up into variables is unstructured "data" -- though some say that's a misnomer. Any field researcher knows when they are looking raw information in the face, and puzzling over how to collect data.
 
-Suppose you need data on how businesses fail, so you download [half a million e-mails from Enron executives](https://www.cs.cmu.edu/~./enron/) that preceeded the energy company's collapse in 2001.
+![]({{ site.baseurl }}/images/salmon.jpg){:width="25%"} ![]({{ site.baseurl }}/images/cards.jpg){:width="41.8%"}  
+*Photo by [trinisands](https://www.flickr.com/photos/50680623@N04) / [CC BY-SA](https://creativecommons.org/licenses/by-sa/2.0/) and by [Archives New Zealand](https://www.flickr.com/photos/archivesnz/) / [CC BY](https://creativecommons.org/licenses/by/2.0/)*
+{:.captioned}
+
+===
+
+Suppose you want to collect data on how businesses fail, so you download [half a million e-mails from Enron executives](https://www.cs.cmu.edu/~./enron/) that preceeded the energy company's collapse in 2001.
+
+~~~
+Message-ID: <2108779.1075845194830.JavaMail.evans@thyme>
+Date: Thu, 7 Jun 2001 14:08:12 -0700 (PDT)
+From: a..hughes@enron.com
+To: jeff.skilling@enron.com, kenneth.lay@enron.com
+Subject: Quicksilver Resources
+Cc: rebecca.mcdonald@enron.com, james.derrick@enron.com
+
+Ken and Jeff:
+
+Glen Darden, the President and CEO of Quicksilver Resources, Inc., is a
+longtime personal and professional friend of mine.  Recently, he has asked
+whether I would consider serving as an outside ...
+~~~
+{:.text-document title="data/177.txt"}
+
+===
 
 Structuring the data for analysis does not mean you quantify everything, although certainly some information can be quantified.
 Rather, turning unstructured information into structured data is a process of identifying concepts, definining variables, and assigning their values (i.e. taking measurements) from the textual, audio or video content.
@@ -46,26 +85,23 @@ Rather, turning unstructured information into structured data is a process of id
 
 Possible examples for variables of different classes to associate with the Enron e-mails.
 
-Interval / Numerical
-: e.g. timestamp, e-mail length, occurrences of a given theme
-
-Ordered
-: e.g sender's position in the company, event in process-tracing sequence
-
-Categorical
-: e.g. recipient(s), sender's department, thematic code
-
-Qualitative
-: e.g. topic, greeting, sentiment
+| Category | Example |
+|--
+| *Interval (or Numeric)* | timestamp, e-mail length, occurrences of a given topic |
+| *Ordered* | sender's position in the company, position in process-tracing sequence of events |
+| *Categorical* | sender's department in the company, sender-recipient network connections |
+| *Qualitative* | message topics, sentiment |
 
 ===
 
-What distinguishes *qualitative* data from unstructured information? Remember, we're only calling something data if it's the measurement of a **variable**.
+Question
+: What distinguishes *qualitative data* from unstructured information?
 
-1. It is the measurement of a variable that relates to a defined concept
-1. It is qualitative, i.e. categorical, un-ordered and taking any value
+Answer
+: It is the measurement of a variable that relates to a well-defined concept
+: It is qualitative, i.e. categorical, un-ordered and taking any value
 
-Processing of texts, surveys, recordings, etc. into variables (whether qualitative or not), is often part of "qualitiative data analysis".
+Processing of texts, surveys, recordings, etc. into variables (whether qualitative or not), is often described as qualitiative data analysis.
 
 ===
 
@@ -84,4 +120,4 @@ Processing of texts, surveys, recordings, etc. into variables (whether qualitati
   - Algorithmic approach to coding extensive document collections.
   - e.g. latent Dirichlet allocation (LDA)
 
-These are different ways of performing "feature engineering", which requires both domain knowledge and programing skill to link concepts with variables and create structured data from different information sources.
+These are different ways of performing "feature engineering", which requires both domain knowledge and programing skill. The feature engineer faces the dual challenges of linking concepts to variables and of creating structured data about these variables from a source of raw information.

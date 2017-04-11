@@ -1,13 +1,6 @@
 # Lesson
 
-title:
-handouts:
-tag:
-lesson:
-instructor:
-authors:
-
-title: "Unstructured and Qualitative Data"
+title: "Extracting and Mining Texts for Structured Data"
 handouts: worksheet.R
 tag: v0.0
 instructor: Ian Carroll
@@ -20,10 +13,11 @@ lesson: 8
 slide_sorter:
   - data
   - scraping
+  - networks
   - mining
   - content
-  - topic
-  - conclude
+#  - topic
+  - qual
 
 #####################################
 # Only modify content above or risk #

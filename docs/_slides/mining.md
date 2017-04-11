@@ -3,42 +3,132 @@
 
 ## Text mining
 
-Extracting measurements of quantitative varialbes from unstructured information is the "field-work" component of research projects that rely on texts for empirical observations.
+Developing measurements of quantitative variables from unstructured information is another component of the "field-work" in research projects that rely on texts for empirical observations.
 
 - Searching strings for patterns
-- Cleaning documents of un-informative strings
+- Cleaning strings of un-informative patterns
 - Quantifying string occurrences and associations
+- Interpretting the meaning of associated strings
 
 ===
 
-## Isolate the unstructured information
+## Isolate unstructured information
+
+Assuming the structured data in the Enron e-mail headers has been captured, strip down the content to the unstructured message.
 
 
 ~~~r
-for (idx in seq(docs)) {
-  header_last <- str_match(content(docs[[idx]]), '^X-FileName:')
-  header_last_idx <- which(!is.na(header_last))
-  header_last_idx <- header_last_idx[[1]]
-  content(docs[[idx]]) <- content(docs[[idx]])[-(1:header_last_idx)]
+for (i in seq(docs)) {
+  lines <- content(docs[[i]])
+  header_last <- str_match(lines, '^X-FileName:')
+  repeat_first <- str_match(lines, '--Original Message--')
+  header_last <- which(!is.na(header_last))
+  message_begin <- header_last[[1]] + 1
+  repeat_first <- which(!is.na(repeat_first))
+  message_end <- c(repeat_first - 1, length(lines))[[1]]
+  content(docs[[i]]) <- lines[message_begin:message_end]
 }
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
+
+~~~r
+content(docs[[2]])
+~~~
+{:.input}
+~~~
+[1] ""                                                                                             
+[2] "\tRonnie, I just got back from vacation and wanted to follow up on the discussion below."     
+[3] "\tHave you heard back from Jerry?  Do you need me to try calling Delaine again?  Thanks. Lynn"
+[4] ""                                                                                             
+~~~
+{:.output}
 ===
 
 ## Functions for cleaning strings
 
+These are some of the functions listed by `getTransformations`.
+
 
 ~~~r
-docs <- tm_map(docs, removePunctuation)
-docs <- tm_map(docs, removeNumbers)
-docs <- tm_map(docs, content_transformer(tolower))
-docs <- tm_map(docs, removeWords, stopwords("english"))
-docs <- tm_map(docs, removeWords, c("department", "email"))
-docs <- tm_map(docs, stemDocument)
-docs <- tm_map(docs, stripWhitespace)
+clean_docs <- docs
+clean_docs <- tm_map(clean_docs, removePunctuation)
+clean_docs <- tm_map(clean_docs, removeNumbers)
+clean_docs <- tm_map(clean_docs, stripWhitespace)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
+content(clean_docs[[2]])
+~~~
+{:.input}
+~~~
+[1] ""                                                                                       
+[2] " Ronnie I just got back from vacation and wanted to follow up on the discussion below"  
+[3] " Have you heard back from Jerry Do you need me to try calling Delaine again Thanks Lynn"
+[4] ""                                                                                       
+~~~
+{:.output}
+
+===
+
+Additional transformations using base R functions can be used within a `content_transformation` wrapper.
+
+
+~~~r
+clean_docs <- tm_map(clean_docs, content_transformer(tolower))
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
+content(clean_docs[[2]])
+~~~
+{:.input}
+~~~
+[1] ""                                                                                       
+[2] " ronnie i just got back from vacation and wanted to follow up on the discussion below"  
+[3] " have you heard back from jerry do you need me to try calling delaine again thanks lynn"
+[4] ""                                                                                       
+~~~
+{:.output}
+
+===
+
+Customize document preparation with your own functions. The function must be wrapped in `content_transformer` if designed to accept and return strings rather than PlainTextDocuments.
+
+
+~~~r
+collapse <- function(x) {
+  paste(x, collapse = '')
+}
+clean_docs <- tm_map(clean_docs, content_transformer(collapse))  
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
+content(clean_docs[[2]])
+~~~
+{:.input}
+~~~
+[1] " ronnie i just got back from vacation and wanted to follow up on the discussion below have you heard back from jerry do you need me to try calling delaine again thanks lynn"
+~~~
+{:.output}
+
+===
+
+# Stopwords and stems
+
+Stopwords are the throwaway words that don't inform content, and lists for different languages are complied within **tm**. Before removing them though, also "stem" the current words to remove plurals and other nuissances.
+
+
+~~~r
+clean_docs <- tm_map(clean_docs, stemDocument)
+clean_docs <- tm_map(clean_docs, removeWords, stopwords("english"))
+~~~
+{:.input}
 
 ===
 
@@ -46,142 +136,80 @@ docs <- tm_map(docs, stripWhitespace)
 
 
 ~~~r
-dtm <- DocumentTermMatrix(docs)
+dtm <- DocumentTermMatrix(clean_docs)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
-inspect(dtm[1:5, 1:10])
+as.matrix(dtm[1:6, 1:6])
 ~~~
 {:.input}
 ~~~
-<<DocumentTermMatrix (documents: 5, terms: 10)>>
-Non-/sparse entries: 0/50
-Sparsity           : 100%
-Maximal term length: 26
-Weighting          : term frequency (tf)
-
-          Terms
-Docs       aacddacadbccbbdfdhcppdqnet aacrncieortc aaikinhoustonorg
-  1.txt                             0            0                0
-  10.txt                            0            0                0
-  100.txt                           0            0                0
-  1001.txt                          0            0                0
-  1002.txt                          0            0                0
-          Terms
-Docs       aaimmgm aama aanstoo aanstoosaliceenroncom aapl aarhus aaron
-  1.txt          0    0       0                     0    0      0     0
-  10.txt         0    0       0                     0    0      0     0
-  100.txt        0    0       0                     0    0      0     0
-  1001.txt       0    0       0                     0    0      0     0
-  1002.txt       0    0       0                     0    0      0     0
+                            Terms
+Docs                         aaa aaron abacus abandon abb abba
+  10001529.1075861306591.txt   0     0      0       0   0    0
+  10016327.1075853078441.txt   0     0      0       0   0    0
+  10025954.1075852266012.txt   0     0      0       0   0    0
+  10029353.1075861906556.txt   0     0      0       0   0    0
+  10042065.1075862047981.txt   0     0      0       0   0    0
+  10050267.1075853166280.txt   0     0      0       0   0    0
 ~~~
 {:.output}
 
 ===
 
+Outliers may reduce the density of the matrix of term occurrences in each document.
+
 
 ~~~r
-dense_dtm <- removeSparseTerms(dtm, 1 - 10 / length(docs))
+char <- sapply(clean_docs, function(x) nchar(content(x)))
+hist(log10(char))
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+![plot of chunk unnamed-chunk-12]({{ site.baseurl }}/images/unnamed-chunk-12-1.png)
+===
+
+
+~~~r
+inlier <- function(x) {
+  n <- nchar(content(x))
+  n < 10^3 && n > 10
+}
+clean_docs <- tm_filter(clean_docs, inlier)
+dtm <- DocumentTermMatrix(clean_docs)
+dense_dtm <- removeSparseTerms(dtm, 0.999)
+dense_dtm <- dense_dtm[rowSums(as.matrix(dense_dtm)) > 0, ]
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
-inspect(dense_dtm[1:5, 1:10])
+as.matrix(dense_dtm[1:6, 1:6])
 ~~~
 {:.input}
 ~~~
-<<DocumentTermMatrix (documents: 5, terms: 10)>>
-Non-/sparse entries: 2/48
-Sparsity           : 96%
-Maximal term length: 7
-Weighting          : term frequency (tf)
-
-          Terms
-Docs       abil abl abraham absenc absolut abus academ acceler accept
-  1.txt       0   0       0      0       0    0      0       0      0
-  10.txt      0   0       0      0       0    0      0       0      0
-  100.txt     0   0       0      0       0    0      0       0      0
-  1001.txt    0   0       0      0       0    0      0       0      1
-  1002.txt    0   0       0      0       0    0      0       0      0
-          Terms
-Docs       access
-  1.txt         0
-  10.txt        0
-  100.txt       0
-  1001.txt      4
-  1002.txt      0
+                            Terms
+Docs                         abil abl abov absolut accept access
+  10001529.1075861306591.txt    0   0    0       0      0      0
+  10016327.1075853078441.txt    0   0    0       0      0      0
+  10025954.1075852266012.txt    0   0    0       0      0      0
+  10029353.1075861906556.txt    0   0    0       0      0      0
+  10042065.1075862047981.txt    0   0    0       0      0      0
+  10050267.1075853166280.txt    0   0    0       0      0      0
 ~~~
 {:.output}
 
 ===
 
+## Term correlations
 
-~~~r
-freq <- findFreqTerms(dtm, 360)
-~~~
-{:.text-document title="{{ site.handouts }}"}
+The `findAssocs` function checks columns of the document-term matrix for correlations.
 
 
 ~~~r
-freq
-~~~
-{:.input}
-~~~
- [1] "also"                         "bit"                         
- [3] "board"                        "busi"                        
- [5] "call"                         "can"                         
- [7] "center"                       "charsetusascii"              
- [9] "compani"                      "contenttransferencod"        
-[11] "contenttyp"                   "date"                        
-[13] "day"                          "develop"                     
-[15] "employe"                      "energi"                      
-[17] "enron"                        "get"                         
-[19] "help"                         "houston"                     
-[21] "inform"                       "issu"                        
-[23] "javamailevansthym"            "john"                        
-[25] "just"                         "ken"                         
-[27] "kenneth"                      "kennethinbox"                
-[29] "kennethlayenroncom"           "kennethlaymarlay"            
-[31] "klay"                         "klayenroncom"                
-[33] "know"                         "lay"                         
-[35] "layk"                         "like"                        
-[37] "make"                         "manag"                       
-[39] "mani"                         "mark"                        
-[41] "market"                       "may"                         
-[43] "meet"                         "messag"                      
-[45] "messageid"                    "mimevers"                    
-[47] "need"                         "new"                         
-[49] "nonprivilegedinbox"           "nonprivilegedpst"            
-[51] "now"                          "oct"                         
-[53] "oenronounacnrecipientscnklay" "offic"                       
-[55] "one"                          "pdt"                         
-[57] "peopl"                        "pleas"                       
-[59] "power"                        "provid"                      
-[61] "pst"                          "receiv"                      
-[63] "report"                       "see"                         
-[65] "sent"                         "servic"                      
-[67] "subject"                      "take"                        
-[69] "textplain"                    "thank"                       
-[71] "time"                         "use"                         
-[73] "want"                         "will"                        
-[75] "work"                         "xbcc"                        
-[77] "xcc"                          "xfilenam"                    
-[79] "xfolder"                      "xfrom"                       
-[81] "xorigin"                      "xto"                         
-[83] "year"                        
-~~~
-{:.output}
-
-===
-
-## Associations
-
-
-~~~r
-assoc <- findAssocs(dtm, "houston", 0.5)
+assoc <- findAssocs(dense_dtm, 'fuck', 0.2)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
@@ -191,42 +219,80 @@ assoc
 ~~~
 {:.input}
 ~~~
-$houston
-                            center                    hgeeharrygeecom 
-                              0.54                               0.54 
-                             medic               phobbygenesisparkcom 
-                              0.54                               0.54 
-                              texa                          methodist 
-                              0.54                               0.53 
-                               gee                             regent 
-                              0.52                               0.51 
-                           smalley                brendajblackfemagov 
-                              0.51                               0.50 
-                brentkinguthtmcedu                      custocoaircom 
-                              0.50                               0.50 
-               dwangmetrobanknacom                      jlynchslehcom 
-                              0.50                               0.50 
-         jporrettadminhscuthtmcedu                      laurapflfwcom 
-                              0.50                               0.50 
-                 mariamicompctrcom                  mdebakeybcmtmcedu 
-                              0.50                               0.50 
-mdesvigneskendrickcityofhoustonnet                    mhalboutyaolcom 
-                              0.50                               0.50 
-                    nrapoportuhedu                 skarffsphuthtmcedu 
-                              0.50                               0.50 
-             thomashorvathmedvagov 
-                              0.50 
+$fuck
+werent  woman   rude   hate    owe 
+  0.33   0.30   0.22   0.21   0.21 
 ~~~
 {:.output}
+===
+
+## Latent Dirichlet allocation
+
+The LDA algorithim is conceptually similar to dimensionallity reduction techniques for numerical data, such as PCA. Although, LDA requires you to determine the number of "topics" in a corpus beforehand, while PCA allows you to choose the number of principle components needed based on their loadings.
 
 
 ~~~r
-cor(as.matrix(dtm[, c("houston", "anderson")]))
+library(topicmodels)
+
+k = 4
+fit = LDA(dense_dtm, k)
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
+terms(fit, 20)
 ~~~
 {:.input}
 ~~~
-           houston  anderson
-houston  1.0000000 0.4641603
-anderson 0.4641603 1.0000000
+      Topic 1    Topic 2     Topic 3      Topic 4   
+ [1,] "thank"    "get"       "will"       "pleas"   
+ [2,] "lynn"     "will"      "thank"      "will"    
+ [3,] "want"     "can"       "know"       "need"    
+ [4,] "know"     "work"      "just"       "can"     
+ [5,] "let"      "look"      "lynn"       "call"    
+ [6,] "call"     "agreement" "work"       "meet"    
+ [7,] "like"     "need"      "can"        "ani"     
+ [8,] "can"      "pleas"     "think"      "parti"   
+ [9,] "think"    "enron"     "let"        "deal"    
+[10,] "need"     "ani"       "one"        "get"     
+[11,] "time"     "one"       "master"     "also"    
+[12,] "ani"      "copi"      "fyi"        "day"     
+[13,] "may"      "sure"      "see"        "let"     
+[14,] "question" "like"      "dont"       "good"    
+[15,] "make"     "know"      "blackberri" "question"
+[16,] "will"     "send"      "market"     "give"    
+[17,] "send"     "meet"      "first"      "dont"    
+[18,] "chang"    "attach"    "week"       "schedul" 
+[19,] "michell"  "time"      "fax"        "execut"  
+[20,] "get"      "america"   "good"       "offic"   
+~~~
+{:.output}
+
+===
+
+The topic "weights" can be assigned back to the documents for use in future analyses.
+
+
+~~~r
+topics <- posterior(fit, dense_dtm)$topics
+topics <- as.data.frame(topics)
+colnames(topics) <- c('accounts', 'meeting', 'call', 'legal')
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
+head(topics)
+~~~
+{:.input}
+~~~
+                            accounts   meeting      call     legal
+10001529.1075861306591.txt 0.2485370 0.2513410 0.2486368 0.2514853
+10016327.1075853078441.txt 0.2623383 0.2479206 0.2492764 0.2404648
+10025954.1075852266012.txt 0.2491494 0.2516827 0.2518948 0.2472732
+10029353.1075861906556.txt 0.2529080 0.2460397 0.2549427 0.2461097
+10042065.1075862047981.txt 0.2527563 0.2483375 0.2528981 0.2460081
+10050267.1075853166280.txt 0.2553068 0.2427648 0.2498241 0.2521043
 ~~~
 {:.output}

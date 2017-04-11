@@ -3,37 +3,88 @@
 
 ## Text mining
 
-Extracting measurements of quantitative varialbes from unstructured information is the "field-work" component of research projects that rely on texts for empirical observations.
+Developing measurements of quantitative variables from unstructured information is another component of the "field-work" in research projects that rely on texts for empirical observations.
 
 - Searching strings for patterns
-- Cleaning documents of un-informative strings
+- Cleaning strings of un-informative patterns
 - Quantifying string occurrences and associations
+- Interpretting the meaning of associated strings
 
 ===
 
-## Isolate the unstructured information
+## Isolate unstructured information
 
-```{r, eval=FALSE, title="{{ site.handouts }}"}
-for (idx in seq(docs)) {
-  header_last <- str_match(content(docs[[idx]]), '^X-FileName:')
-  header_last_idx <- which(!is.na(header_last))
-  header_last_idx <- header_last_idx[[1]]
-  content(docs[[idx]]) <- content(docs[[idx]])[-(1:header_last_idx)]
+Assuming the structured data in the Enron e-mail headers has been captured, strip down the content to the unstructured message.
+
+```{r, title="{{ site.handouts }}"}
+for (i in seq(docs)) {
+  lines <- content(docs[[i]])
+  header_last <- str_match(lines, '^X-FileName:')
+  repeat_first <- str_match(lines, '--Original Message--')
+  header_last <- which(!is.na(header_last))
+  message_begin <- header_last[[1]] + 1
+  repeat_first <- which(!is.na(repeat_first))
+  message_end <- c(repeat_first - 1, length(lines))[[1]]
+  content(docs[[i]]) <- lines[message_begin:message_end]
 }
 ```
 
+```{r}
+content(docs[[2]])
+```
 ===
 
 ## Functions for cleaning strings
 
+These are some of the functions listed by `getTransformations`.
+
 ```{r, title="{{ site.handouts }}"}
-docs <- tm_map(docs, removePunctuation)
-docs <- tm_map(docs, removeNumbers)
-docs <- tm_map(docs, content_transformer(tolower))
-docs <- tm_map(docs, removeWords, stopwords("english"))
-docs <- tm_map(docs, removeWords, c("department", "email"))
-docs <- tm_map(docs, stemDocument)
-docs <- tm_map(docs, stripWhitespace)
+clean_docs <- docs
+clean_docs <- tm_map(clean_docs, removePunctuation)
+clean_docs <- tm_map(clean_docs, removeNumbers)
+clean_docs <- tm_map(clean_docs, stripWhitespace)
+```
+
+```{r}
+content(clean_docs[[2]])
+```
+
+===
+
+Additional transformations using base R functions can be used within a `content_transformation` wrapper.
+
+```{r, title="{{ site.handouts }}"}
+clean_docs <- tm_map(clean_docs, content_transformer(tolower))
+```
+
+```{r}
+content(clean_docs[[2]])
+```
+
+===
+
+Customize document preparation with your own functions. The function must be wrapped in `content_transformer` if designed to accept and return strings rather than PlainTextDocuments.
+
+```{r, title="{{ site.handouts }}"}
+collapse <- function(x) {
+  paste(x, collapse = '')
+}
+clean_docs <- tm_map(clean_docs, content_transformer(collapse))  
+```
+
+```{r}
+content(clean_docs[[2]])
+```
+
+===
+
+# Stopwords and stems
+
+Stopwords are the throwaway words that don't inform content, and lists for different languages are complied within **tm**. Before removing them though, also "stem" the current words to remove plurals and other nuissances.
+
+```{r}
+clean_docs <- tm_map(clean_docs, stemDocument)
+clean_docs <- tm_map(clean_docs, removeWords, stopwords("english"))
 ```
 
 ===
@@ -41,45 +92,78 @@ docs <- tm_map(docs, stripWhitespace)
 ## Create Bag-Of-Words Matrix
 
 ```{r, title="{{ site.handouts }}"}
-dtm <- DocumentTermMatrix(docs)
+dtm <- DocumentTermMatrix(clean_docs)
 ```
 
 ```{r}
-inspect(dtm[1:5, 1:10])
+as.matrix(dtm[1:6, 1:6])
 ```
 
+===
+
+Outliers may reduce the density of the matrix of term occurrences in each document.
+
+```{r, title = "{{ site.handouts }}"}
+char <- sapply(clean_docs, function(x) nchar(content(x)))
+hist(log10(char))
+```
 ===
 
 ```{r, title = "{{ site.handouts }}"}
-dense_dtm <- removeSparseTerms(dtm, 1 - 10 / length(docs))
+inlier <- function(x) {
+  n <- nchar(content(x))
+  n < 10^3 && n > 10
+}
+clean_docs <- tm_filter(clean_docs, inlier)
+dtm <- DocumentTermMatrix(clean_docs)
+dense_dtm <- removeSparseTerms(dtm, 0.999)
+dense_dtm <- dense_dtm[rowSums(as.matrix(dense_dtm)) > 0, ]
 ```
 
 ```{r}
-inspect(dense_dtm[1:5, 1:10])
+as.matrix(dense_dtm[1:6, 1:6])
 ```
 
 ===
 
-```{r, title="{{ site.handouts }}"}
-freq <- findFreqTerms(dtm, 360)
-```
+## Term correlations
 
-```{r}
-freq
-```
-
-===
-
-## Associations
+The `findAssocs` function checks columns of the document-term matrix for correlations.
 
 ```{r, title="{{ site.handouts }}"}
-assoc <- findAssocs(dtm, "houston", 0.5)
+assoc <- findAssocs(dense_dtm, 'fuck', 0.2)
 ```
 
 ```{r}
 assoc
 ```
+===
+
+## Latent Dirichlet allocation
+
+The LDA algorithim is conceptually similar to dimensionallity reduction techniques for numerical data, such as PCA. Although, LDA requires you to determine the number of "topics" in a corpus beforehand, while PCA allows you to choose the number of principle components needed based on their loadings.
+
+```{r, title="{{ site.handouts }}"}
+library(topicmodels)
+
+k = 4
+fit = LDA(dense_dtm, k)
+```
 
 ```{r}
-cor(as.matrix(dtm[, c("houston", "anderson")]))
+terms(fit, 20)
+```
+
+===
+
+The topic "weights" can be assigned back to the documents for use in future analyses.
+
+```{r, title="{{ site.handouts }}"}
+topics <- posterior(fit, dense_dtm)$topics
+topics <- as.data.frame(topics)
+colnames(topics) <- c('accounts', 'meeting', 'call', 'legal')
+```
+
+```{r}
+head(topics)
 ```
