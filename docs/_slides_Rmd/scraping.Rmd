@@ -27,7 +27,7 @@ Continuing with the Enron e-mails theme, begin by bringing the documents into an
 library(tm)
 library(SnowballC)
 
-docs <- Corpus(DirSource("data/enron"))
+docs <- VCorpus(DirSource("data/enron"))
 ```
 
 ```{r}
