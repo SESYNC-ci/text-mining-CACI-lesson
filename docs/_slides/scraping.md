@@ -28,7 +28,7 @@ Continuing with the Enron e-mails theme, begin by bringing the documents into an
 library(tm)
 library(SnowballC)
 
-docs <- Corpus(DirSource("data/enron"))
+docs <- VCorpus(DirSource("data/enron"))
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
@@ -39,7 +39,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : character(0)
-  datetimestamp: 2017-04-11 19:04:06
+  datetimestamp: 2017-05-22 13:56:24
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -149,7 +149,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : dutch.quigley@enron.com
-  datetimestamp: 2017-04-11 19:04:06
+  datetimestamp: 2017-05-22 13:56:24
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt

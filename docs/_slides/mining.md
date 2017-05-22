@@ -235,8 +235,8 @@ The LDA algorithim is conceptually similar to dimensionallity reduction techniqu
 ~~~r
 library(topicmodels)
 
-k = 4
-fit = LDA(dense_dtm, k)
+seed = 12345
+fit = LDA(dense_dtm, k = 4, control = list(seed=seed))
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
@@ -246,27 +246,27 @@ terms(fit, 20)
 ~~~
 {:.input}
 ~~~
-      Topic 1 Topic 2     Topic 3 Topic 4 
- [1,] "meet"  "will"      "will"  "get"   
- [2,] "thank" "thank"     "can"   "know"  
- [3,] "like"  "pleas"     "need"  "ani"   
- [4,] "lynn"  "question"  "thank" "thank" 
- [5,] "can"   "let"       "know"  "pleas" 
- [6,] "call"  "parti"     "lynn"  "email" 
- [7,] "let"   "ani"       "send"  "will"  
- [8,] "time"  "get"       "enron" "work"  
- [9,] "just"  "think"     "copi"  "want"  
-[10,] "pleas" "agreement" "work"  "need"  
-[11,] "take"  "week"      "let"   "lynn"  
-[12,] "day"   "work"      "look"  "like"  
-[13,] "may"   "can"       "just"  "one"   
-[14,] "need"  "master"    "pleas" "look"  
-[15,] "make"  "time"      "price" "dont"  
-[16,] "also"  "attach"    "good"  "back"  
-[17,] "give"  "next"      "see"   "just"  
-[18,] "chang" "want"      "time"  "market"
-[19,] "new"   "net"       "group" "call"  
-[20,] "offic" "call"      "fax"   "enron" 
+      Topic 1    Topic 2     Topic 3   Topic 4    
+ [1,] "will"     "thank"     "will"    "can"      
+ [2,] "get"      "lynn"      "thank"   "meet"     
+ [3,] "ani"      "pleas"     "know"    "thank"    
+ [4,] "look"     "let"       "can"     "know"     
+ [5,] "let"      "get"       "pleas"   "work"     
+ [6,] "know"     "like"      "want"    "will"     
+ [7,] "need"     "agreement" "need"    "question" 
+ [8,] "think"    "master"    "like"    "week"     
+ [9,] "price"    "parti"     "ani"     "pleas"    
+[10,] "email"    "just"      "group"   "lynn"     
+[11,] "just"     "need"      "work"    "enron"    
+[12,] "time"     "call"      "lynn"    "trade"    
+[13,] "question" "back"      "dont"    "use"      
+[14,] "market"   "execut"    "just"    "send"     
+[15,] "send"     "receiv"    "see"     "get"      
+[16,] "lynn"     "want"      "talk"    "may"      
+[17,] "enron"    "servic"    "michell" "hope"     
+[18,] "call"     "take"      "time"    "veri"     
+[19,] "new"      "offic"     "make"    "schedul"  
+[20,] "one"      "enron"     "day"     "agreement"
 ~~~
 {:.output}
 
@@ -289,11 +289,11 @@ head(topics)
 {:.input}
 ~~~
                             accounts   meeting      call     legal
-10001529.1075861306591.txt 0.2498256 0.2492723 0.2504437 0.2504584
-10016327.1075853078441.txt 0.2538796 0.2414556 0.2486334 0.2560314
-10025954.1075852266012.txt 0.2500814 0.2478927 0.2499806 0.2520453
-10029353.1075861906556.txt 0.2500758 0.2497153 0.2504751 0.2497338
-10042065.1075862047981.txt 0.2539185 0.2515753 0.2499933 0.2445129
-10050267.1075853166280.txt 0.2587994 0.2449467 0.2451866 0.2510673
+10001529.1075861306591.txt 0.2470315 0.2497333 0.2549814 0.2482538
+10016327.1075853078441.txt 0.2505420 0.2562433 0.2522828 0.2409319
+10025954.1075852266012.txt 0.2509041 0.2477392 0.2492562 0.2521004
+10029353.1075861906556.txt 0.2473255 0.2525143 0.2506372 0.2495230
+10042065.1075862047981.txt 0.2483039 0.2513652 0.2464095 0.2539213
+10050267.1075853166280.txt 0.2439128 0.2486203 0.2573323 0.2501346
 ~~~
 {:.output}
