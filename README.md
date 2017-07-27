@@ -9,5 +9,6 @@
 -- a merge conflict with upstream.   --
 -------------------------------------->
 
-[lesson]: http://sesync-ci.github.io/text-mining-lesson
-[slideshow]: http://sesync-ci.github.io/text-mining-lesson/instructor
+
+[lesson]: https://sesync-ci.github.io/text-mining-lesson
+[slideshow]: https://sesync-ci.github.io/text-mining-lesson/slides
