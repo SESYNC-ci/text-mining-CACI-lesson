@@ -147,8 +147,8 @@ The LDA algorithim is conceptually similar to dimensionallity reduction techniqu
 ```{r, title="{{ site.handouts }}"}
 library(topicmodels)
 
-k = 4
-fit = LDA(dense_dtm, k)
+seed = 12345
+fit = LDA(dense_dtm, k = 4, control = list(seed=seed))
 ```
 
 ```{r}
