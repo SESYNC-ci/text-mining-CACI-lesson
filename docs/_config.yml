@@ -1,8 +1,11 @@
 # Site
 
 title: "Extracting and Mining Texts for Structured Data"
-handouts: worksheet.R
-tag: v0.0
+handouts:
+ - worksheet.R
+ - data/enron
+ - data/README.md
+tag: v0.1
 instructor: Ian Carroll
 authors:
  - Ian Carroll
