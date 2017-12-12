@@ -27,10 +27,16 @@ Continuing with the Enron e-mails theme, begin by bringing the documents into an
 ~~~r
 library(tm)
 library(SnowballC)
+~~~
 
+~~~
+Error in library(SnowballC): there is no package called 'SnowballC'
+~~~
+
+~~~r
 docs <- VCorpus(DirSource("data/enron"))
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 
 ~~~r
@@ -39,7 +45,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : character(0)
-  datetimestamp: 2017-05-22 15:15:54
+  datetimestamp: 2017-12-12 17:42:47
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -122,7 +128,7 @@ str_match(txt, '^From: (.*)')
 [15,] NA                              NA                       
 [16,] NA                              NA                       
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 
@@ -140,7 +146,7 @@ for (i in seq(docs)) {
   meta(docs[[i]], "author") <- from[[1]]
 }
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 
 ~~~r
@@ -149,7 +155,7 @@ meta(docs[[1]])
 {:.input}
 ~~~
   author       : dutch.quigley@enron.com
-  datetimestamp: 2017-05-22 15:15:54
+  datetimestamp: 2017-12-12 17:42:47
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt

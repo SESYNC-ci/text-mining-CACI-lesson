@@ -32,7 +32,7 @@ subject <- which(!is.na(match))
 to <- paste(content(doc)[4:(subject[1] - 1)], collapse='')
 to_list <- str_extract_all(to, '\\b\\S+@\\S+\\b')
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 
 ~~~r
@@ -62,7 +62,7 @@ for (i in seq(docs)) {
   edgelist <- rbind(edgelist, edges)
 }
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 
 ~~~r
@@ -85,9 +85,10 @@ library(network)
 g <- network(edgelist)
 plot(g)
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ![plot of chunk network_graph]({{ site.baseurl }}/images/network_graph-1.png)
+{:.captioned}
 
 ===
 
