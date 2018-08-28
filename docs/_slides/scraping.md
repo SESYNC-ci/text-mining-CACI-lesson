@@ -24,28 +24,27 @@ Note that "\\" must be escaped in R, so the first pattern would be scripted as `
 Continuing with the Enron e-mails theme, begin by bringing the documents into an analysis with the **tm** package.
 
 
+
 ~~~r
 library(tm)
 library(SnowballC)
-~~~
 
-~~~
-Error in library(SnowballC): there is no package called 'SnowballC'
-~~~
-
-~~~r
 docs <- VCorpus(DirSource("data/enron"))
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-meta(docs[[1]])
+> meta(docs[[1]])
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
   author       : character(0)
-  datetimestamp: 2017-12-12 17:42:47
+  datetimestamp: 2018-08-28 20:57:09
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -54,13 +53,17 @@ meta(docs[[1]])
 ~~~
 {:.output}
 
+
 ===
 
 
+
 ~~~r
-content(docs[[1]])
+> content(docs[[1]])
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
  [1] "Message-ID: <10001529.1075861306591.JavaMail.evans@thyme>"                                        
  [2] "Date: Wed, 7 Nov 2001 13:58:24 -0800 (PST)"                                                       
@@ -97,9 +100,11 @@ content(docs[[1]])
 ~~~
 {:.output}
 
+
 ===
 
 The regex pattern `^From: .*` matches any whole line that begins with "From: ". Parentheses cause parts of the match to be captured for substitution or extraction.
+
 
 
 ~~~r
@@ -108,6 +113,8 @@ library(stringr)
 txt <- content(docs[[1]])[1:16]
 str_match(txt, '^From: (.*)')
 ~~~
+{:.text-document title="{{ site.handouts[0] }}"}
+
 
 ~~~
       [,1]                            [,2]                     
@@ -128,13 +135,15 @@ str_match(txt, '^From: (.*)')
 [15,] NA                              NA                       
 [16,] NA                              NA                       
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:.output}
+
 
 ===
 
 ## Extract structured data
 
 The `meta` object for each e-mail was sparsely populated, but some of those variables can be extracted from the `content`.
+
 
 
 ~~~r
@@ -149,13 +158,17 @@ for (i in seq(docs)) {
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-meta(docs[[1]])
+> meta(docs[[1]])
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
   author       : dutch.quigley@enron.com
-  datetimestamp: 2017-12-12 17:42:47
+  datetimestamp: 2018-08-28 20:57:09
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -163,3 +176,4 @@ meta(docs[[1]])
   origin       : character(0)
 ~~~
 {:.output}
+

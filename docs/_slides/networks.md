@@ -6,11 +6,14 @@
 Relational data are tables that establish a relationship between entities from other tables. Suppose we have a table with a record for each unique address in the Enron e-mails, then a second table with a record for each pair of e-mail addresses that exchanged a message is relational data.
 
 
+
 ~~~r
-doc <- docs[[2]]
-content(doc)[1:6]
+> doc <- docs[[2]]
+> content(doc)[1:6]
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] "Message-ID: <10016327.1075853078441.JavaMail.evans@thyme>"               
 [2] "Date: Mon, 20 Aug 2001 16:14:45 -0700 (PDT)"                             
@@ -21,9 +24,11 @@ content(doc)[1:6]
 ~~~
 {:.output}
 
+
 ===
 
 The "To:" field is slightly harder to extract, because it may include multiple recipients.
+
 
 
 ~~~r
@@ -35,19 +40,25 @@ to_list <- str_extract_all(to, '\\b\\S+@\\S+\\b')
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-to_list
+> to_list
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [[1]]
 [1] "ronnie.brickman@enron.com" "randy.howard@enron.com"   
 ~~~
 {:.output}
 
+
 ===
 
 Embed the above lines in a for loop to build an edge list for the network of e-mail senders and recipients.
+
 
 
 ~~~r
@@ -65,18 +76,24 @@ for (i in seq(docs)) {
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-dim(edgelist)
+> dim(edgelist)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] 10431     2
 ~~~
 {:.output}
 
+
 ===
 
 The **network** package provides convenient tools for working with relational data.
+
 
 
 ~~~r
@@ -86,8 +103,7 @@ g <- network(edgelist)
 plot(g)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-
-![plot of chunk network_graph]({{ site.baseurl }}/images/network_graph-1.png)
+![ ]({{ site.baseurl }}/images/networks/network_graph-1.png)
 {:.captioned}
 
 ===

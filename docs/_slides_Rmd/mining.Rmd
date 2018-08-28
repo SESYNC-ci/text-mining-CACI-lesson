@@ -132,7 +132,7 @@ as.matrix(dense_dtm[1:6, 1:6])
 The `findAssocs` function checks columns of the document-term matrix for correlations.
 
 ```{r, title="{{ site.handouts[0] }}"}
-assoc <- findAssocs(dense_dtm, 'fuck', 0.2)
+assoc <- findAssocs(dense_dtm, 'ken', 0.2)
 ```
 
 ```{r}

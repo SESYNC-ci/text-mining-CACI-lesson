@@ -17,6 +17,7 @@ Developing measurements of quantitative variables from unstructured information 
 Assuming the structured data in the Enron e-mail headers has been captured, strip down the content to the unstructured message.
 
 
+
 ~~~r
 for (i in seq(docs)) {
   lines <- content(docs[[i]])
@@ -32,10 +33,14 @@ for (i in seq(docs)) {
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-content(docs[[2]])
+> content(docs[[2]])
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] ""                                                                                             
 [2] "\tRonnie, I just got back from vacation and wanted to follow up on the discussion below."     
@@ -43,11 +48,13 @@ content(docs[[2]])
 [4] ""                                                                                             
 ~~~
 {:.output}
+
 ===
 
 ## Functions for cleaning strings
 
 These are some of the functions listed by `getTransformations`.
+
 
 
 ~~~r
@@ -59,10 +66,14 @@ clean_docs <- tm_map(clean_docs, stripWhitespace)
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-content(clean_docs[[2]])
+> content(clean_docs[[2]])
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] ""                                                                                       
 [2] " Ronnie I just got back from vacation and wanted to follow up on the discussion below"  
@@ -71,9 +82,11 @@ content(clean_docs[[2]])
 ~~~
 {:.output}
 
+
 ===
 
 Additional transformations using base R functions can be used within a `content_transformation` wrapper.
+
 
 
 ~~~r
@@ -82,10 +95,14 @@ clean_docs <- tm_map(clean_docs, content_transformer(tolower))
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-content(clean_docs[[2]])
+> content(clean_docs[[2]])
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] ""                                                                                       
 [2] " ronnie i just got back from vacation and wanted to follow up on the discussion below"  
@@ -94,9 +111,11 @@ content(clean_docs[[2]])
 ~~~
 {:.output}
 
+
 ===
 
 Customize document preparation with your own functions. The function must be wrapped in `content_transformer` if designed to accept and return strings rather than PlainTextDocuments.
+
 
 
 ~~~r
@@ -108,14 +127,19 @@ clean_docs <- tm_map(clean_docs, content_transformer(collapse))
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-content(clean_docs[[2]])
+> content(clean_docs[[2]])
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] " ronnie i just got back from vacation and wanted to follow up on the discussion below have you heard back from jerry do you need me to try calling delaine again thanks lynn"
 ~~~
 {:.output}
+
 
 ===
 
@@ -124,22 +148,18 @@ content(clean_docs[[2]])
 Stopwords are the throwaway words that don't inform content, and lists for different languages are complied within **tm**. Before removing them though, also "stem" the current words to remove plurals and other nuissances.
 
 
+
 ~~~r
-clean_docs <- tm_map(clean_docs, stemDocument)
+> clean_docs <- tm_map(clean_docs, stemDocument)
+> clean_docs <- tm_map(clean_docs, removeWords, stopwords("english"))
 ~~~
-{:.input}
-~~~
-Error in loadNamespace(name): there is no package called 'SnowballC'
-~~~
-{:.input}
-~~~r
-clean_docs <- tm_map(clean_docs, removeWords, stopwords("english"))
-~~~
-{:.output}
+{:.input title="Console"}
+
 
 ===
 
 ## Create Bag-Of-Words Matrix
+
 
 
 ~~~r
@@ -148,25 +168,31 @@ dtm <- DocumentTermMatrix(clean_docs)
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-as.matrix(dtm[1:6, 1:6])
+> as.matrix(dtm[1:6, 1:6])
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
                             Terms
-Docs                         aaa aaron abacus abandon abandoning abb
-  10001529.1075861306591.txt   0     0      0       0          0   0
-  10016327.1075853078441.txt   0     0      0       0          0   0
-  10025954.1075852266012.txt   0     0      0       0          0   0
-  10029353.1075861906556.txt   0     0      0       0          0   0
-  10042065.1075862047981.txt   0     0      0       0          0   0
-  10050267.1075853166280.txt   0     0      0       0          0   0
+Docs                         aaa aaron abacus abandon abb abba
+  10001529.1075861306591.txt   0     0      0       0   0    0
+  10016327.1075853078441.txt   0     0      0       0   0    0
+  10025954.1075852266012.txt   0     0      0       0   0    0
+  10029353.1075861906556.txt   0     0      0       0   0    0
+  10042065.1075862047981.txt   0     0      0       0   0    0
+  10050267.1075853166280.txt   0     0      0       0   0    0
 ~~~
 {:.output}
+
 
 ===
 
 Outliers may reduce the density of the matrix of term occurrences in each document.
+
 
 
 ~~~r
@@ -174,11 +200,11 @@ char <- sapply(clean_docs, function(x) nchar(content(x)))
 hist(log10(char))
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-
-![plot of chunk unnamed-chunk-12]({{ site.baseurl }}/images/unnamed-chunk-12-1.png)
+![ ]({{ site.baseurl }}/images/mining/unnamed-chunk-12-1.png)
 {:.captioned}
 
 ===
+
 
 
 ~~~r
@@ -194,29 +220,26 @@ dense_dtm <- dense_dtm[rowSums(as.matrix(dense_dtm)) > 0, ]
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-as.matrix(dense_dtm[1:6, 1:6])
+> as.matrix(dense_dtm[1:6, 1:6])
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
                             Terms
-Docs                         ability able absolutely accept acceptable
-  10001529.1075861306591.txt       0    0          0      0          0
-  10016327.1075853078441.txt       0    0          0      0          0
-  10025954.1075852266012.txt       0    0          0      0          0
-  10029353.1075861906556.txt       0    0          0      0          0
-  10042065.1075862047981.txt       0    0          0      0          0
-  10050267.1075853166280.txt       0    0          0      0          0
-                            Terms
-Docs                         accepted
-  10001529.1075861306591.txt        0
-  10016327.1075853078441.txt        0
-  10025954.1075852266012.txt        0
-  10029353.1075861906556.txt        0
-  10042065.1075862047981.txt        0
-  10050267.1075853166280.txt        0
+Docs                         abil abl abov absolut accept access
+  10001529.1075861306591.txt    0   0    0       0      0      0
+  10016327.1075853078441.txt    0   0    0       0      0      0
+  10025954.1075852266012.txt    0   0    0       0      0      0
+  10029353.1075861906556.txt    0   0    0       0      0      0
+  10042065.1075862047981.txt    0   0    0       0      0      0
+  10050267.1075853166280.txt    0   0    0       0      0      0
 ~~~
 {:.output}
+
 
 ===
 
@@ -225,24 +248,28 @@ Docs                         accepted
 The `findAssocs` function checks columns of the document-term matrix for correlations.
 
 
+
 ~~~r
-assoc <- findAssocs(dense_dtm, 'fuck', 0.2)
+assoc <- findAssocs(dense_dtm, 'ken', 0.2)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-assoc
+> assoc
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
-$fuck
-     manager       werent        woman    extremely         uses 
-        0.38         0.38         0.34         0.31         0.31 
-        rude       claims conversation 
-        0.25         0.22         0.20 
+$ken
+  lay court 
+ 0.45  0.21 
 ~~~
 {:.output}
+
 ===
 
 ## Latent Dirichlet allocation
@@ -250,70 +277,80 @@ $fuck
 The LDA algorithim is conceptually similar to dimensionallity reduction techniques for numerical data, such as PCA. Although, LDA requires you to determine the number of "topics" in a corpus beforehand, while PCA allows you to choose the number of principle components needed based on their loadings.
 
 
+
 ~~~r
 library(topicmodels)
-~~~
 
-~~~
-Error in library(topicmodels): there is no package called 'topicmodels'
-~~~
-
-~~~r
 seed = 12345
 fit = LDA(dense_dtm, k = 4, control = list(seed=seed))
-~~~
-
-~~~
-Error in LDA(dense_dtm, k = 4, control = list(seed = seed)): could not find function "LDA"
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-terms(fit, 20)
+> terms(fit, 20)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
-Error in terms(fit, 20): object 'fit' not found
+      Topic 1    Topic 2     Topic 3   Topic 4    
+ [1,] "will"     "thank"     "will"    "can"      
+ [2,] "get"      "lynn"      "thank"   "meet"     
+ [3,] "ani"      "pleas"     "know"    "thank"    
+ [4,] "look"     "let"       "can"     "know"     
+ [5,] "let"      "get"       "pleas"   "work"     
+ [6,] "know"     "like"      "want"    "will"     
+ [7,] "need"     "agreement" "need"    "question" 
+ [8,] "think"    "master"    "like"    "week"     
+ [9,] "price"    "parti"     "ani"     "pleas"    
+[10,] "email"    "just"      "group"   "lynn"     
+[11,] "just"     "need"      "work"    "enron"    
+[12,] "time"     "call"      "lynn"    "trade"    
+[13,] "question" "back"      "dont"    "use"      
+[14,] "market"   "execut"    "just"    "send"     
+[15,] "send"     "receiv"    "see"     "get"      
+[16,] "lynn"     "want"      "talk"    "may"      
+[17,] "enron"    "servic"    "michell" "hope"     
+[18,] "call"     "take"      "time"    "veri"     
+[19,] "new"      "offic"     "make"    "schedul"  
+[20,] "one"      "enron"     "day"     "agreement"
 ~~~
 {:.output}
+
 
 ===
 
 The topic "weights" can be assigned back to the documents for use in future analyses.
 
 
+
 ~~~r
 topics <- posterior(fit, dense_dtm)$topics
-~~~
-
-~~~
-Error in posterior(fit, dense_dtm): could not find function "posterior"
-~~~
-
-~~~r
 topics <- as.data.frame(topics)
-~~~
-
-~~~
-Error in as.data.frame(topics): object 'topics' not found
-~~~
-
-~~~r
 colnames(topics) <- c('accounts', 'meeting', 'call', 'legal')
-~~~
-
-~~~
-Error in colnames(topics) <- c("accounts", "meeting", "call", "legal"): object 'topics' not found
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-head(topics)
+> head(topics)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
-Error in head(topics): object 'topics' not found
+                            accounts   meeting      call     legal
+10001529.1075861306591.txt 0.2470315 0.2497333 0.2549814 0.2482538
+10016327.1075853078441.txt 0.2505420 0.2562433 0.2522828 0.2409319
+10025954.1075852266012.txt 0.2509041 0.2477392 0.2492562 0.2521004
+10029353.1075861906556.txt 0.2473255 0.2525143 0.2506372 0.2495230
+10042065.1075862047981.txt 0.2483039 0.2513652 0.2464095 0.2539213
+10050267.1075853166280.txt 0.2439128 0.2486203 0.2573323 0.2501346
 ~~~
 {:.output}
+
