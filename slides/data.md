@@ -52,7 +52,7 @@ Answer
 
 Information that has not been carved up into variables is unstructured "data" -- though some say that's a misnomer. Any field researcher knows when they are looking raw information in the face, and puzzling over how to collect data.
 
-![]({% include asset.html path="images/salmon.jpg){:width="25%"} ![]({{ site.baseurl }}/images/cards.jpg" %}){:width="41.8%"}  
+![]({% include asset.html path="images/salmon.jpg" %}){:width="25%"} ![]({% include asset.html path="images/cards.jpg" %}){:width="41.8%"} 
 *Photo by [trinisands](https://www.flickr.com/photos/50680623@N04) / [CC BY-SA](https://creativecommons.org/licenses/by-sa/2.0/) and by [Archives New Zealand](https://www.flickr.com/photos/archivesnz/) / [CC BY](https://creativecommons.org/licenses/by/2.0/)*
 {:.captioned}
 

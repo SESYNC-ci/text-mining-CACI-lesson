@@ -44,7 +44,7 @@ docs <- VCorpus(DirSource("data/enron"))
 
 ~~~
   author       : character(0)
-  datetimestamp: 2019-07-03 18:27:00
+  datetimestamp: 2019-07-03 18:46:25
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -168,7 +168,7 @@ for (i in seq(docs)) {
 
 ~~~
   author       : dutch.quigley@enron.com
-  datetimestamp: 2019-07-03 18:27:00
+  datetimestamp: 2019-07-03 18:46:25
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
