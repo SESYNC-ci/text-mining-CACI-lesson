@@ -1,39 +1,17 @@
-# Site
+# Build Configuration
 
-title: "Extracting and Mining Texts for Structured Data"
-handouts:
- - worksheet.R
- - data/enron
- - data/README.md
-tag: v0.2
-instructor: Ian Carroll
-authors:
- - Ian Carroll
-lesson: 8
-
-# Slides
-
-slide_sorter:
-  - data
-  - scraping
-  - networks
-  - mining
-  - content
-#  - topic
-#  - qual
-
-#####################################
-# Only modify content above or risk #
-# merge conflicts with upstream.    #
-#####################################
-
-# Style
-
-styleurl: https://cdn.rawgit.com/sesync-ci/lesson-style/v2.0/docs
-reveal: https://cdn.rawgit.com/hakimel/reveal.js/3.5.0
-
-# Jekyll
-
-markdown: kramdown
+markdown: kramdown 
 collections:
-  - slides
+  slides:
+    output: false
+  views:
+    output: true
+    permalink: /:name/
+  archive:
+    output: true
+    permalink: /:year/:month/:day/:title:output_ext
+
+# Asset Location
+
+imageurl: /assets/images/
+styleurl: /assets/css/
