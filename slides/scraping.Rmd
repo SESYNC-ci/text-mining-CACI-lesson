@@ -23,7 +23,7 @@ Note that "\\" must be escaped in R, so the first pattern would be scripted as `
 
 Continuing with the Enron e-mails theme, begin by bringing the documents into an analysis with the **tm** package.
 
-```{r, message=FALSE, title="{{ site.handouts[0] }}"}
+```{r, message=FALSE, handout = 0}
 library(tm)
 library(SnowballC)
 
@@ -44,7 +44,7 @@ content(docs[[1]])
 
 The regex pattern `^From: .*` matches any whole line that begins with "From: ". Parentheses cause parts of the match to be captured for substitution or extraction.
 
-```{r, title="{{ site.handouts[0] }}"}
+```{r, handout = 0}
 library(stringr)
 
 txt <- content(docs[[1]])[1:16]
@@ -57,7 +57,7 @@ str_match(txt, '^From: (.*)')
 
 The `meta` object for each e-mail was sparsely populated, but some of those variables can be extracted from the `content`.
 
-```{r, title="{{ site.handouts[0] }}"}
+```{r, handout = 0}
 for (i in seq(docs)) {
   txt <- content(docs[[i]])
   match <- str_match(txt, '^From: (.*)')

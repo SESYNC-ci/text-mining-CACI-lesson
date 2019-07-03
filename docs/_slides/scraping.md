@@ -31,7 +31,7 @@ library(SnowballC)
 
 docs <- VCorpus(DirSource("data/enron"))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -39,12 +39,12 @@ docs <- VCorpus(DirSource("data/enron"))
 ~~~r
 > meta(docs[[1]])
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
   author       : character(0)
-  datetimestamp: 2018-08-28 20:57:09
+  datetimestamp: 2019-07-03 18:27:00
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -61,7 +61,7 @@ docs <- VCorpus(DirSource("data/enron"))
 ~~~r
 > content(docs[[1]])
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -113,7 +113,7 @@ library(stringr)
 txt <- content(docs[[1]])[1:16]
 str_match(txt, '^From: (.*)')
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -155,7 +155,7 @@ for (i in seq(docs)) {
   meta(docs[[i]], "author") <- from[[1]]
 }
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -163,12 +163,12 @@ for (i in seq(docs)) {
 ~~~r
 > meta(docs[[1]])
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
   author       : dutch.quigley@enron.com
-  datetimestamp: 2018-08-28 20:57:09
+  datetimestamp: 2019-07-03 18:27:00
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt

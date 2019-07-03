@@ -16,7 +16,7 @@ Developing measurements of quantitative variables from unstructured information 
 
 Assuming the structured data in the Enron e-mail headers has been captured, strip down the content to the unstructured message.
 
-```{r, title="{{ site.handouts[0] }}"}
+```{r, handout = 0}
 for (i in seq(docs)) {
   lines <- content(docs[[i]])
   header_last <- str_match(lines, '^X-FileName:')
@@ -38,7 +38,7 @@ content(docs[[2]])
 
 These are some of the functions listed by `getTransformations`.
 
-```{r, title="{{ site.handouts[0] }}"}
+```{r, handout = 0}
 clean_docs <- docs
 clean_docs <- tm_map(clean_docs, removePunctuation)
 clean_docs <- tm_map(clean_docs, removeNumbers)
@@ -53,7 +53,7 @@ content(clean_docs[[2]])
 
 Additional transformations using base R functions can be used within a `content_transformation` wrapper.
 
-```{r, title="{{ site.handouts[0] }}"}
+```{r, handout = 0}
 clean_docs <- tm_map(clean_docs, content_transformer(tolower))
 ```
 
@@ -65,7 +65,7 @@ content(clean_docs[[2]])
 
 Customize document preparation with your own functions. The function must be wrapped in `content_transformer` if designed to accept and return strings rather than PlainTextDocuments.
 
-```{r, title="{{ site.handouts[0] }}"}
+```{r, handout = 0}
 collapse <- function(x) {
   paste(x, collapse = '')
 }
@@ -91,7 +91,7 @@ clean_docs <- tm_map(clean_docs, removeWords, stopwords("english"))
 
 ## Create Bag-Of-Words Matrix
 
-```{r, title="{{ site.handouts[0] }}"}
+```{r, handout = 0}
 dtm <- DocumentTermMatrix(clean_docs)
 ```
 
@@ -103,14 +103,14 @@ as.matrix(dtm[1:6, 1:6])
 
 Outliers may reduce the density of the matrix of term occurrences in each document.
 
-```{r, title = "{{ site.handouts[0] }}"}
+```{r, handout = 0}
 char <- sapply(clean_docs, function(x) nchar(content(x)))
 hist(log10(char))
 ```
 
 ===
 
-```{r, title = "{{ site.handouts[0] }}"}
+```{r, handout = 0}
 inlier <- function(x) {
   n <- nchar(content(x))
   n < 10^3 & n > 10
@@ -131,7 +131,7 @@ as.matrix(dense_dtm[1:6, 1:6])
 
 The `findAssocs` function checks columns of the document-term matrix for correlations.
 
-```{r, title="{{ site.handouts[0] }}"}
+```{r, handout = 0}
 assoc <- findAssocs(dense_dtm, 'ken', 0.2)
 ```
 
@@ -144,7 +144,7 @@ assoc
 
 The LDA algorithim is conceptually similar to dimensionallity reduction techniques for numerical data, such as PCA. Although, LDA requires you to determine the number of "topics" in a corpus beforehand, while PCA allows you to choose the number of principle components needed based on their loadings.
 
-```{r, title="{{ site.handouts[0] }}"}
+```{r, handout = 0}
 library(topicmodels)
 
 seed = 12345
@@ -159,7 +159,7 @@ terms(fit, 20)
 
 The topic "weights" can be assigned back to the documents for use in future analyses.
 
-```{r, title="{{ site.handouts[0] }}"}
+```{r, handout = 0}
 topics <- posterior(fit, dense_dtm)$topics
 topics <- as.data.frame(topics)
 colnames(topics) <- c('accounts', 'meeting', 'call', 'legal')

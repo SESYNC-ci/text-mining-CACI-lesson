@@ -30,7 +30,7 @@ for (i in seq(docs)) {
   content(docs[[i]]) <- lines[message_begin:message_end]
 }
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -38,7 +38,7 @@ for (i in seq(docs)) {
 ~~~r
 > content(docs[[2]])
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -63,7 +63,7 @@ clean_docs <- tm_map(clean_docs, removePunctuation)
 clean_docs <- tm_map(clean_docs, removeNumbers)
 clean_docs <- tm_map(clean_docs, stripWhitespace)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -71,7 +71,7 @@ clean_docs <- tm_map(clean_docs, stripWhitespace)
 ~~~r
 > content(clean_docs[[2]])
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -92,7 +92,7 @@ Additional transformations using base R functions can be used within a `content_
 ~~~r
 clean_docs <- tm_map(clean_docs, content_transformer(tolower))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -100,7 +100,7 @@ clean_docs <- tm_map(clean_docs, content_transformer(tolower))
 ~~~r
 > content(clean_docs[[2]])
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -124,7 +124,7 @@ collapse <- function(x) {
 }
 clean_docs <- tm_map(clean_docs, content_transformer(collapse))  
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -132,7 +132,7 @@ clean_docs <- tm_map(clean_docs, content_transformer(collapse))
 ~~~r
 > content(clean_docs[[2]])
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -153,7 +153,7 @@ Stopwords are the throwaway words that don't inform content, and lists for diffe
 > clean_docs <- tm_map(clean_docs, stemDocument)
 > clean_docs <- tm_map(clean_docs, removeWords, stopwords("english"))
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ===
@@ -165,7 +165,7 @@ Stopwords are the throwaway words that don't inform content, and lists for diffe
 ~~~r
 dtm <- DocumentTermMatrix(clean_docs)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -173,7 +173,7 @@ dtm <- DocumentTermMatrix(clean_docs)
 ~~~r
 > as.matrix(dtm[1:6, 1:6])
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -199,8 +199,8 @@ Outliers may reduce the density of the matrix of term occurrences in each docume
 char <- sapply(clean_docs, function(x) nchar(content(x)))
 hist(log10(char))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/mining/unnamed-chunk-12-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/mining/unnamed-chunk-12-1.png" %})
 {:.captioned}
 
 ===
@@ -217,7 +217,7 @@ dtm <- DocumentTermMatrix(clean_docs)
 dense_dtm <- removeSparseTerms(dtm, 0.999)
 dense_dtm <- dense_dtm[rowSums(as.matrix(dense_dtm)) > 0, ]
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -225,7 +225,7 @@ dense_dtm <- dense_dtm[rowSums(as.matrix(dense_dtm)) > 0, ]
 ~~~r
 > as.matrix(dense_dtm[1:6, 1:6])
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -252,7 +252,7 @@ The `findAssocs` function checks columns of the document-term matrix for correla
 ~~~r
 assoc <- findAssocs(dense_dtm, 'ken', 0.2)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -260,7 +260,7 @@ assoc <- findAssocs(dense_dtm, 'ken', 0.2)
 ~~~r
 > assoc
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -284,7 +284,7 @@ library(topicmodels)
 seed = 12345
 fit = LDA(dense_dtm, k = 4, control = list(seed=seed))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -292,7 +292,7 @@ fit = LDA(dense_dtm, k = 4, control = list(seed=seed))
 ~~~r
 > terms(fit, 20)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -332,7 +332,7 @@ topics <- posterior(fit, dense_dtm)$topics
 topics <- as.data.frame(topics)
 colnames(topics) <- c('accounts', 'meeting', 'call', 'legal')
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -340,7 +340,7 @@ colnames(topics) <- c('accounts', 'meeting', 'call', 'legal')
 ~~~r
 > head(topics)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~

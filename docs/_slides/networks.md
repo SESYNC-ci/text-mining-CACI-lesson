@@ -11,7 +11,7 @@ Relational data are tables that establish a relationship between entities from o
 > doc <- docs[[2]]
 > content(doc)[1:6]
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -37,7 +37,7 @@ subject <- which(!is.na(match))
 to <- paste(content(doc)[4:(subject[1] - 1)], collapse='')
 to_list <- str_extract_all(to, '\\b\\S+@\\S+\\b')
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -45,7 +45,7 @@ to_list <- str_extract_all(to, '\\b\\S+@\\S+\\b')
 ~~~r
 > to_list
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -73,7 +73,7 @@ for (i in seq(docs)) {
   edgelist <- rbind(edgelist, edges)
 }
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -81,7 +81,7 @@ for (i in seq(docs)) {
 ~~~r
 > dim(edgelist)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -102,8 +102,8 @@ library(network)
 g <- network(edgelist)
 plot(g)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/networks/network_graph-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/networks/network_graph-1.png" %})
 {:.captioned}
 
 ===
