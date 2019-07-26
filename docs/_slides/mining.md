@@ -180,26 +180,7 @@ cleaning, such as removing outliers.
 
 ~~~r
 library(ggplot2)
-~~~
-{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
-
-~~~
-
-Attaching package: 'ggplot2'
-~~~
-{:.output}
-
-
-~~~
-The following object is masked from 'package:NLP':
-
-    annotate
-~~~
-{:.output}
-
-
-~~~r
 ggplot(words, aes(x = nchar)) +
   geom_histogram(binwidth = 1)
 ~~~

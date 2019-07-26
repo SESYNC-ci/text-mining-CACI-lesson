@@ -126,7 +126,7 @@ words <- dtt %>%
 The `words` data frame is more amenable to further inspection and
 cleaning, such as removing outliers.
 
-```{r, handout = 0}
+```{r, handout = 0, message = FALSE}
 library(ggplot2)
 
 ggplot(words, aes(x = nchar)) +
