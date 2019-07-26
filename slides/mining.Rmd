@@ -108,7 +108,7 @@ into a longer form table with a row for every document and term combination.
 
 ===
 
-```{r, handout = 0}
+```{r, handout = 0, message = FALSE}
 library(tidytext)
 library(dplyr)
 
@@ -183,7 +183,7 @@ word_assoc <- data.frame(
 A "wordcloud" emphasizes those words that have a high co-occurence
 in the email corpus with the CEO's first name.
 
-```{r}
+```{r, handout = 0}
 library(ggwordcloud)
 
 ggplot(word_assoc,

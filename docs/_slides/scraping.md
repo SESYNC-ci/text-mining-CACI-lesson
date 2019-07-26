@@ -31,13 +31,13 @@ nice in a R string.
 
 
 ~~~r
-> library(stringr)
-> 
-> str_extract_all(
-+   'Email info@sesync.org or tweet @SESYNC for details!',
-+   '\\b\\S+@\\S+\\b')
+library(stringr)
+
+str_extract_all(
+  'Email info@sesync.org or tweet @SESYNC for details!',
+  '\\b\\S+@\\S+\\b')
 ~~~
-{:title="Console" .input}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~

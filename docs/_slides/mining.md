@@ -159,34 +159,7 @@ into a longer form table with a row for every document and term combination.
 ~~~r
 library(tidytext)
 library(dplyr)
-~~~
-{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
-
-~~~
-
-Attaching package: 'dplyr'
-~~~
-{:.output}
-
-
-~~~
-The following objects are masked from 'package:stats':
-
-    filter, lag
-~~~
-{:.output}
-
-
-~~~
-The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union
-~~~
-{:.output}
-
-
-~~~r
 dtt <- tidy(dtm)
 words <- dtt %>%
   group_by(term) %>%
@@ -319,12 +292,12 @@ in the email corpus with the CEO's first name.
 
 
 ~~~r
-> library(ggwordcloud)
-> 
-> ggplot(word_assoc,
-+   aes(label = word, size = ken)) +
-+   geom_text_wordcloud_area()
+library(ggwordcloud)
+
+ggplot(word_assoc,
+  aes(label = word, size = ken)) +
+  geom_text_wordcloud_area()
 ~~~
-{:title="Console" .input}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 ![ ]({% include asset.html path="images/mining/unnamed-chunk-14-1.png" %})
 {:.captioned}

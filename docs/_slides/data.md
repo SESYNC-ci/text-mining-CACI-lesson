@@ -86,7 +86,7 @@ I'm sorry I haven't been more involved is setting this up, but I think the
 agenda looks kond of soft.  At a minimum, I would like to turn the schedule
 around and hit the hard subjects like Q3, risk management, and ...
 ~~~
-{:.text-document title="data/enron/16986095.1075852351708.txt"}
+{:.text-document title="data/enron/16986095.1075852351708.txt" .no-eval}
 
 Structuring the data for analysis does not mean you quantify everything,
 although certainly some information can be quantified. Rather, turning

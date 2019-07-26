@@ -28,7 +28,7 @@ a document that has particular features defined as a "pattern".
 Note that "\" must be escaped in R, so the third pattern does not look very
 nice in a R string.
 
-```{r}
+```{r, handout = 0}
 library(stringr)
 
 str_extract_all(
