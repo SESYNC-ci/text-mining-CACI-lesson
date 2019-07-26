@@ -3,13 +3,19 @@
 
 ## Scraping
 
+For text analysis, whether online or following document OCR, few tools are as useful for pulling
+out strings that represent a value than "regular expressions".
+
+===
+
 ![Text](https://imgs.xkcd.com/comics/regular_expressions.png "Wait, forgot to escape a space. Wheeeeee[taptaptap]eeeeee.")  
 *by Randall Munroe / [CC BY-NC](http://xkcd.com/license.html)*
 {:.captioned}
 
 ===
 
-RegEx is a very flexible, and very fast, program for parsing text.
+RegEx is a very flexible, and very fast, program for finding bits of text within
+a document that has particular features defined as a "pattern".
 
 | Pattern      | String with <span style="color:red;">match</span>                                    |
 |--------------+--------------------------------------------------------------------------------------|
@@ -17,56 +23,72 @@ RegEx is a very flexible, and very fast, program for parsing text.
 | \\$[0-9,]+   | The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil.                |
 | \b\S+@\S+\b  | E-mail <span style="color:red;">info@sesync.org</span> or tweet @SESYNC for details! |
 
-Note that "\\" must be escaped in R, so the first pattern would be scripted as `"\\$[0-9,]+"`.
+===
+
+Note that "\" must be escaped in R, so the third pattern does not look very
+nice in a R string.
+
+```{r}
+library(stringr)
+
+str_extract_all(
+  'Email info@sesync.org or tweet @SESYNC for details!',
+  '\\b\\S+@\\S+\\b')
+```
 
 ===
 
-Continuing with the Enron e-mails theme, begin by bringing the documents into an analysis with the **tm** package.
+Continuing with the Enron emails theme, begin by collecting the documents for
+analysis with the **tm** package.
 
 ```{r, message=FALSE, handout = 0}
 library(tm)
-library(SnowballC)
 
-docs <- VCorpus(DirSource("data/enron"))
+enron <- VCorpus(DirSource("data/enron"))
+email <- enron[[1]]
 ```
 
 ```{r}
-meta(docs[[1]])
+meta(email)
 ```
 
 ===
 
 ```{r}
-content(docs[[1]])
+content(email)
 ```
 
 ===
 
-The regex pattern `^From: .*` matches any whole line that begins with "From: ". Parentheses cause parts of the match to be captured for substitution or extraction.
+The RegEx pattern `^From: .*` matches any whole line that begins with "From: ".
+Parentheses cause parts of the match to be captured for substitution or
+extraction.
 
 ```{r, handout = 0}
-library(stringr)
-
-txt <- content(docs[[1]])[1:16]
-str_match(txt, '^From: (.*)')
+match <- str_match(content(email), '^From: (.*)')
+head(match)
 ```
 
 ===
 
-## Extract structured data
+## Data Extraction
 
-The `meta` object for each e-mail was sparsely populated, but some of those variables can be extracted from the `content`.
+The `meta` object for each e-mail was sparsely populated, but some of those
+variables can be extracted from the `content`.
+
+===
 
 ```{r, handout = 0}
-for (i in seq(docs)) {
-  txt <- content(docs[[i]])
-  match <- str_match(txt, '^From: (.*)')
-  row <- !is.na(match[ , 1])
-  from <- match[row, 2]
-  meta(docs[[i]], "author") <- from[[1]]
-}
+enron <- tm_map(enron, function(email) {
+  body <- content(email)
+  match <- str_match(body, '^From: (.*)')
+  match <- na.omit(match)
+  meta(email, 'author') <- match[[1, 2]]
+  return(email)
+})
 ```
 
 ```{r}
-meta(docs[[1]])
+email <- enron[[1]]
+meta(email)
 ```

@@ -1,15 +1,21 @@
 ---
 ---
 
-## Extracting relational data
+## Relational Data Extraction
 
-Relational data are tables that establish a relationship between entities from other tables. Suppose we have a table with a record for each unique address in the Enron e-mails, then a second table with a record for each pair of e-mail addresses that exchanged a message is relational data.
+Relational data are tables that establish a relationship between entities from
+other tables.
+
+Suppose we have a table with a record for each unique email address in the Enron
+emails, then a second table with a record for each pair of addresses that
+exchanged a message is relational data.
+{:.notes}
 
 
 
 ~~~r
-> doc <- docs[[2]]
-> content(doc)[1:6]
+> email <- enron[[2]]
+> head(content(email))
 ~~~
 {:title="Console" .input}
 
@@ -27,50 +33,25 @@ Relational data are tables that establish a relationship between entities from o
 
 ===
 
-The "To:" field is slightly harder to extract, because it may include multiple recipients.
+This "To:" field is slightly harder to extract, because it may include multiple
+recipients.
 
 
 
 ~~~r
-match <- str_match(content(doc), '^Subject:')
-subject <- which(!is.na(match))
-to <- paste(content(doc)[4:(subject[1] - 1)], collapse='')
-to_list <- str_extract_all(to, '\\b\\S+@\\S+\\b')
-~~~
-{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
-
-
-
-
-~~~r
-> to_list
-~~~
-{:title="Console" .input}
-
-
-~~~
-[[1]]
-[1] "ronnie.brickman@enron.com" "randy.howard@enron.com"   
-~~~
-{:.output}
-
-
-===
-
-Embed the above lines in a for loop to build an edge list for the network of e-mail senders and recipients.
-
-
-
-~~~r
-edgelist <- NULL
-for (i in seq(docs)) {
-  doc <- docs[[i]]
-  from <- meta(doc, 'author')
-  subject <- which(!is.na(str_match(content(doc), '^Subject:')))
-  to <- paste(content(doc)[4:(subject[1] - 1)], collapse='')
-  to_list <- str_extract_all(to, '\\b\\S+@\\S+\\b')
-  edges <- t(rbind(from, to_list[[1]]))
-  edgelist <- rbind(edgelist, edges)
+get_to <- function(email) {
+  body <- content(email)
+  match <- str_detect(body, '^To:')
+  if (any(match)) {
+    to_start <- which(match)[[1]]
+    match <- str_detect(body, '^Subject:')
+    to_end <- which(match)[[1]] - 1
+    to <- paste(body[to_start:to_end], collapse = '')
+    to <- str_extract_all(to, '\\b\\S+@\\S+\\b')
+    return(unlist(to))
+  } else {
+    return(NA)
+  }
 }
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
@@ -79,13 +60,47 @@ for (i in seq(docs)) {
 
 
 ~~~r
-> dim(edgelist)
+> get_to(email)
 ~~~
 {:title="Console" .input}
 
 
 ~~~
-[1] 10431     2
+[1] "ronnie.brickman@enron.com" "randy.howard@enron.com"   
+~~~
+{:.output}
+
+
+===
+
+Embed the above lines in a for loop to build an edge list for the network of
+e-mail senders and recipients.
+
+
+
+~~~r
+edges <- lapply(enron, FUN = function(email) {
+  from <- meta(email, 'author')
+  to <- get_to(email)
+  return(cbind(from, to))
+})
+edges <- do.call(rbind, edges)
+edges <- na.omit(edges)
+attr(edges, 'na.action') <- NULL
+~~~
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+
+
+
+
+~~~r
+> dim(edges)
+~~~
+{:title="Console" .input}
+
+
+~~~
+[1] 10493     2
 ~~~
 {:.output}
 
@@ -99,7 +114,7 @@ The **network** package provides convenient tools for working with relational da
 ~~~r
 library(network)
 
-g <- network(edgelist)
+g <- network(edges)
 plot(g)
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
@@ -112,10 +127,6 @@ Question
 : Is a network qualitative or quantitative data?
 
 Answer
-: {:.fragment} It certainly doesn't fall into line with traditional statistical methods, but the variables involved are categorical. Methods for fitting models on networks (e.g. ERGMs) are an active research area.
-
-===
-
-## Scraping online
-
-Scraping websites for data that, like the addresses in the Enron e-mails, are already stored as well-defined variables is a similar process. The structured data are in there, you just have to extract it. The **httr** package can assist with downloading web page content into R as a navigable HTML document.
+: {:.fragment} It certainly doesn't fall into line with traditional statistical
+methods, but the variables involved are categorical. Methods for fitting models
+on networks (e.g. ERGMs) are an active research area.

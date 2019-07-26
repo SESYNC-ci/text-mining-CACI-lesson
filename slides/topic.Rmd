@@ -1,0 +1,58 @@
+---
+---
+
+## Topic Modelling
+
+Latent Dirichlet Allocation (LDA) is an algorithim that's conceptually similar
+to dimensionallity reduction techniques for numerical data, such as PCA.
+Although, LDA requires you to determine the number of "topics" in a corpus
+beforehand, while PCA allows you to choose the number of principle components
+needed based on their loadings.
+{:.notes}
+
+===
+
+```{r, handout = 0}
+library(topicmodels)
+
+seed = 12345
+fit = LDA(dtm_trimmed, k = 5, control = list(seed=seed))
+```
+
+```{r}
+terms(fit, 20)
+```
+
+===
+
+By assigning topic "weights" back to the documents, which gives an indication of how likely it
+is to find each topic in a document, you have engineered some numerical features associated
+with each document that might further help with classification or visualization.
+{:.notes}
+
+```{r, handout = 0}
+email_topics <- as.data.frame(
+  posterior(fit, dtm_trimmed)$topics)
+```
+
+```{r}
+head(email_topics)
+```
+
+===
+
+The challeng with LDA, as with any machine learning result, is interpretting the
+result. Are the "topics" recognizable by the words used?
+
+```{r, handout = 0}
+library(ggwordcloud)
+
+topics <- tidy(fit) %>%
+  filter(beta > 0.004)
+
+ggplot(topics,
+  aes(size = beta, label = term)) +
+  geom_text_wordcloud_area(rm_outside = TRUE) +
+  facet_wrap(vars(topic))
+```
+

@@ -1,9 +1,9 @@
-title: "Extracting and Mining Texts for Structured Data"
+title: "Structure for Unstructured Data"
 handouts:
  - worksheet.R
  - data/enron
  - data/README.md
-tag: v0.2
+tag: v0.3
 instructor: Ian Carroll
 authors:
  - Ian Carroll
@@ -13,6 +13,6 @@ sorter:
   - scraping
   - networks
   - mining
-  - content
-#  - topic
+#  - content
+  - topic
 #  - qual

@@ -3,13 +3,19 @@
 
 ## Scraping
 
+For text analysis, whether online or following document OCR, few tools are as useful for pulling
+out strings that represent a value than "regular expressions".
+
+===
+
 ![Text](https://imgs.xkcd.com/comics/regular_expressions.png "Wait, forgot to escape a space. Wheeeeee[taptaptap]eeeeee.")  
 *by Randall Munroe / [CC BY-NC](http://xkcd.com/license.html)*
 {:.captioned}
 
 ===
 
-RegEx is a very flexible, and very fast, program for parsing text.
+RegEx is a very flexible, and very fast, program for finding bits of text within
+a document that has particular features defined as a "pattern".
 
 | Pattern      | String with <span style="color:red;">match</span>                                    |
 |--------------+--------------------------------------------------------------------------------------|
@@ -17,19 +23,42 @@ RegEx is a very flexible, and very fast, program for parsing text.
 | \\$[0-9,]+   | The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil.                |
 | \b\S+@\S+\b  | E-mail <span style="color:red;">info@sesync.org</span> or tweet @SESYNC for details! |
 
-Note that "\\" must be escaped in R, so the first pattern would be scripted as `"\\$[0-9,]+"`.
+===
+
+Note that "\" must be escaped in R, so the third pattern does not look very
+nice in a R string.
+
+
+
+~~~r
+> library(stringr)
+> 
+> str_extract_all(
++   'Email info@sesync.org or tweet @SESYNC for details!',
++   '\\b\\S+@\\S+\\b')
+~~~
+{:title="Console" .input}
+
+
+~~~
+[[1]]
+[1] "info@sesync.org"
+~~~
+{:.output}
+
 
 ===
 
-Continuing with the Enron e-mails theme, begin by bringing the documents into an analysis with the **tm** package.
+Continuing with the Enron emails theme, begin by collecting the documents for
+analysis with the **tm** package.
 
 
 
 ~~~r
 library(tm)
-library(SnowballC)
 
-docs <- VCorpus(DirSource("data/enron"))
+enron <- VCorpus(DirSource("data/enron"))
+email <- enron[[1]]
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
@@ -37,14 +66,14 @@ docs <- VCorpus(DirSource("data/enron"))
 
 
 ~~~r
-> meta(docs[[1]])
+> meta(email)
 ~~~
 {:title="Console" .input}
 
 
 ~~~
   author       : character(0)
-  datetimestamp: 2019-07-03 18:46:25
+  datetimestamp: 2019-07-26 10:47:47
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -59,7 +88,7 @@ docs <- VCorpus(DirSource("data/enron"))
 
 
 ~~~r
-> content(docs[[1]])
+> content(email)
 ~~~
 {:title="Console" .input}
 
@@ -103,57 +132,50 @@ docs <- VCorpus(DirSource("data/enron"))
 
 ===
 
-The regex pattern `^From: .*` matches any whole line that begins with "From: ". Parentheses cause parts of the match to be captured for substitution or extraction.
+The RegEx pattern `^From: .*` matches any whole line that begins with "From: ".
+Parentheses cause parts of the match to be captured for substitution or
+extraction.
 
 
 
 ~~~r
-library(stringr)
-
-txt <- content(docs[[1]])[1:16]
-str_match(txt, '^From: (.*)')
+match <- str_match(content(email), '^From: (.*)')
+head(match)
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
-      [,1]                            [,2]                     
- [1,] NA                              NA                       
- [2,] NA                              NA                       
- [3,] "From: dutch.quigley@enron.com" "dutch.quigley@enron.com"
- [4,] NA                              NA                       
- [5,] NA                              NA                       
- [6,] NA                              NA                       
- [7,] NA                              NA                       
- [8,] NA                              NA                       
- [9,] NA                              NA                       
-[10,] NA                              NA                       
-[11,] NA                              NA                       
-[12,] NA                              NA                       
-[13,] NA                              NA                       
-[14,] NA                              NA                       
-[15,] NA                              NA                       
-[16,] NA                              NA                       
+     [,1]                            [,2]                     
+[1,] NA                              NA                       
+[2,] NA                              NA                       
+[3,] "From: dutch.quigley@enron.com" "dutch.quigley@enron.com"
+[4,] NA                              NA                       
+[5,] NA                              NA                       
+[6,] NA                              NA                       
 ~~~
 {:.output}
 
 
 ===
 
-## Extract structured data
+## Data Extraction
 
-The `meta` object for each e-mail was sparsely populated, but some of those variables can be extracted from the `content`.
+The `meta` object for each e-mail was sparsely populated, but some of those
+variables can be extracted from the `content`.
+
+===
 
 
 
 ~~~r
-for (i in seq(docs)) {
-  txt <- content(docs[[i]])
-  match <- str_match(txt, '^From: (.*)')
-  row <- !is.na(match[ , 1])
-  from <- match[row, 2]
-  meta(docs[[i]], "author") <- from[[1]]
-}
+enron <- tm_map(enron, function(email) {
+  body <- content(email)
+  match <- str_match(body, '^From: (.*)')
+  match <- na.omit(match)
+  meta(email, 'author') <- match[[1, 2]]
+  return(email)
+})
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
@@ -161,14 +183,15 @@ for (i in seq(docs)) {
 
 
 ~~~r
-> meta(docs[[1]])
+> email <- enron[[1]]
+> meta(email)
 ~~~
 {:title="Console" .input}
 
 
 ~~~
   author       : dutch.quigley@enron.com
-  datetimestamp: 2019-07-03 18:46:25
+  datetimestamp: 2019-07-26 10:47:47
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt

@@ -1,9 +1,11 @@
 ---
 ---
 
-## Text mining
+## Text Mining
 
-Developing measurements of quantitative variables from unstructured information is another component of the "field-work" in research projects that rely on texts for empirical observations.
+Developing measurements of quantitative variables from unstructured information
+is another component of the "field-work" in research projects that rely on texts
+for empirical observations.
 
 - Searching strings for patterns
 - Cleaning strings of un-informative patterns
@@ -12,23 +14,24 @@ Developing measurements of quantitative variables from unstructured information 
 
 ===
 
-## Isolate unstructured information
+## Cleaning Text
 
-Assuming the structured data in the Enron e-mail headers has been captured, strip down the content to the unstructured message.
+Assuming the structured data in the Enron e-mail headers has been captured,
+strip down the content to the unstructured message.
 
 
 
 ~~~r
-for (i in seq(docs)) {
-  lines <- content(docs[[i]])
-  header_last <- str_match(lines, '^X-FileName:')
-  header_last <- which(!is.na(header_last))
-  message_begin <- header_last[[1]] + 1
-  repeat_first <- str_match(lines, '--Original Message--')
-  repeat_first <- which(!is.na(repeat_first))
-  message_end <- c(repeat_first - 1, length(lines))[[1]]
-  content(docs[[i]]) <- lines[message_begin:message_end]
-}
+enron <- tm_map(enron, function(email) {
+  body <- content(email)
+  match <- str_detect(body, '^X-FileName:')
+  begin <- which(match)[[1]] + 1
+  match <- str_detect(body, '^[>\\s]*[_\\-]{2}')
+  match <- c(match, TRUE)
+  end <- which(match)[[1]] - 1
+  content(email) <- body[begin:end]
+  return(email)
+})
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
@@ -36,7 +39,8 @@ for (i in seq(docs)) {
 
 
 ~~~r
-> content(docs[[2]])
+> email <- enron[[2]]
+> content(email)
 ~~~
 {:title="Console" .input}
 
@@ -51,17 +55,19 @@ for (i in seq(docs)) {
 
 ===
 
-## Functions for cleaning strings
+## Predefind Cleaning Functions
 
 These are some of the functions listed by `getTransformations`.
 
 
 
 ~~~r
-clean_docs <- docs
-clean_docs <- tm_map(clean_docs, removePunctuation)
-clean_docs <- tm_map(clean_docs, removeNumbers)
-clean_docs <- tm_map(clean_docs, stripWhitespace)
+library(magrittr)
+
+enron_words <- enron %>%
+  tm_map(removePunctuation) %>%
+  tm_map(removeNumbers) %>%
+  tm_map(stripWhitespace)
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
@@ -69,7 +75,8 @@ clean_docs <- tm_map(clean_docs, stripWhitespace)
 
 
 ~~~r
-> content(clean_docs[[2]])
+> email <- enron_words[[2]]
+> content(email)
 ~~~
 {:title="Console" .input}
 
@@ -85,172 +92,183 @@ clean_docs <- tm_map(clean_docs, stripWhitespace)
 
 ===
 
-Additional transformations using base R functions can be used within a `content_transformation` wrapper.
+Customize document preparation with your own functions. The function must be
+wrapped in `content_transformer` if designed to accept and return strings rather
+than PlainTextDocuments.
 
 
 
 ~~~r
-clean_docs <- tm_map(clean_docs, content_transformer(tolower))
-~~~
-{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
-
-
-
-
-~~~r
-> content(clean_docs[[2]])
-~~~
-{:title="Console" .input}
-
-
-~~~
-[1] ""                                                                                       
-[2] " ronnie i just got back from vacation and wanted to follow up on the discussion below"  
-[3] " have you heard back from jerry do you need me to try calling delaine again thanks lynn"
-[4] ""                                                                                       
-~~~
-{:.output}
-
-
-===
-
-Customize document preparation with your own functions. The function must be wrapped in `content_transformer` if designed to accept and return strings rather than PlainTextDocuments.
-
-
-
-~~~r
-collapse <- function(x) {
-  paste(x, collapse = '')
+remove_link <- function(body) {
+  match <- str_detect(body, '(http|www|mailto)')
+  body[!match]
 }
-clean_docs <- tm_map(clean_docs, content_transformer(collapse))  
+enron_words <- enron_words %>%
+  tm_map(content_transformer(remove_link))  
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
+===
+
+# Stopwords and Stems
+
+Stopwords are the throwaway words that don't inform content, and lists for
+different languages are complied within **tm**. Before removing them though,
+also "stem" the current words to remove plurals and other nuissances.
+{:.notes}
+
 
 
 ~~~r
-> content(clean_docs[[2]])
+enron_words <- enron_words %>%
+  tm_map(stemDocument) %>%
+  tm_map(removeWords, stopwords("english"))
 ~~~
-{:title="Console" .input}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+
+
+===
+
+## Document-Term Matrix
+
+The "bag-of-words" model for turning a corpus into structured data is
+to simply count the word frequency in each document.
+
+===
+
+
+
+~~~r
+dtm <- DocumentTermMatrix(enron_words)
+~~~
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+
+
+===
+
+## Long Form
+
+The [tidytext](){:.rlib} package converts the (wide) Document Term Matrix
+into a longer form table with a row for every document and term combination.
+
+===
+
+
+
+~~~r
+library(tidytext)
+library(dplyr)
+~~~
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
-[1] " ronnie i just got back from vacation and wanted to follow up on the discussion below have you heard back from jerry do you need me to try calling delaine again thanks lynn"
+
+Attaching package: 'dplyr'
 ~~~
 {:.output}
 
 
-===
-
-# Stopwords and stems
-
-Stopwords are the throwaway words that don't inform content, and lists for different languages are complied within **tm**. Before removing them though, also "stem" the current words to remove plurals and other nuissances.
-
-
-
-~~~r
-> clean_docs <- tm_map(clean_docs, stemDocument)
-> clean_docs <- tm_map(clean_docs, removeWords, stopwords("english"))
 ~~~
-{:title="Console" .input}
+The following objects are masked from 'package:stats':
 
-
-===
-
-## Create Bag-Of-Words Matrix
-
-
-
-~~~r
-dtm <- DocumentTermMatrix(clean_docs)
-~~~
-{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
-
-
-
-
-~~~r
-> as.matrix(dtm[1:6, 1:6])
-~~~
-{:title="Console" .input}
-
-
-~~~
-                            Terms
-Docs                         aaa aaron abacus abandon abb abba
-  10001529.1075861306591.txt   0     0      0       0   0    0
-  10016327.1075853078441.txt   0     0      0       0   0    0
-  10025954.1075852266012.txt   0     0      0       0   0    0
-  10029353.1075861906556.txt   0     0      0       0   0    0
-  10042065.1075862047981.txt   0     0      0       0   0    0
-  10050267.1075853166280.txt   0     0      0       0   0    0
+    filter, lag
 ~~~
 {:.output}
 
 
+~~~
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+~~~
+{:.output}
+
+
+~~~r
+dtt <- tidy(dtm)
+words <- dtt %>%
+  group_by(term) %>%
+  summarise(
+    n = n(),
+    total = sum(count)) %>%
+  mutate(nchar = nchar(term))
+~~~
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+
+
 ===
 
-Outliers may reduce the density of the matrix of term occurrences in each document.
+The `words` data frame is more amenable to further inspection and
+cleaning, such as removing outliers.
 
 
 
 ~~~r
-char <- sapply(clean_docs, function(x) nchar(content(x)))
-hist(log10(char))
+library(ggplot2)
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
-![ ]({% include asset.html path="images/mining/unnamed-chunk-12-1.png" %})
+
+
+~~~
+
+Attaching package: 'ggplot2'
+~~~
+{:.output}
+
+
+~~~
+The following object is masked from 'package:NLP':
+
+    annotate
+~~~
+{:.output}
+
+
+~~~r
+ggplot(words, aes(x = nchar)) +
+  geom_histogram(binwidth = 1)
+~~~
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/mining/unnamed-chunk-9-1.png" %})
 {:.captioned}
 
 ===
 
+Words with too many characters are probably not actually words, and extremely
+uncommon words won't help when searching for patterns.
+
 
 
 ~~~r
-inlier <- function(x) {
-  n <- nchar(content(x))
-  n < 10^3 & n > 10
-}
-clean_docs <- tm_filter(clean_docs, inlier)
-dtm <- DocumentTermMatrix(clean_docs)
-dense_dtm <- removeSparseTerms(dtm, 0.999)
-dense_dtm <- dense_dtm[rowSums(as.matrix(dense_dtm)) > 0, ]
+dtt_trimmed <- words %>%
+  filter(
+    nchar < 16,
+    n > 1,
+    total > 3) %>%
+  select(term) %>%
+  inner_join(dtt)
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
-
-
-~~~r
-> as.matrix(dense_dtm[1:6, 1:6])
 ~~~
-{:title="Console" .input}
-
-
-~~~
-                            Terms
-Docs                         abil abl abov absolut accept access
-  10001529.1075861306591.txt    0   0    0       0      0      0
-  10016327.1075853078441.txt    0   0    0       0      0      0
-  10025954.1075852266012.txt    0   0    0       0      0      0
-  10029353.1075861906556.txt    0   0    0       0      0      0
-  10042065.1075862047981.txt    0   0    0       0      0      0
-  10050267.1075853166280.txt    0   0    0       0      0      0
+Joining, by = "term"
 ~~~
 {:.output}
 
 
 ===
 
-## Term correlations
-
-The `findAssocs` function checks columns of the document-term matrix for correlations.
+Further steps in analyzing this "bag-of-words" require returning to the
+Document-Term-Matrix structure.
 
 
 
 ~~~r
-assoc <- findAssocs(dense_dtm, 'ken', 0.2)
+dtm_trimmed <- dtt_trimmed %>%
+  cast_dtm(document, term, count)
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
@@ -258,99 +276,55 @@ assoc <- findAssocs(dense_dtm, 'ken', 0.2)
 
 
 ~~~r
-> assoc
+> dtm_trimmed
 ~~~
 {:title="Console" .input}
 
 
 ~~~
-$ken
-  lay court 
- 0.45  0.21 
-~~~
-{:.output}
-
-===
-
-## Latent Dirichlet allocation
-
-The LDA algorithim is conceptually similar to dimensionallity reduction techniques for numerical data, such as PCA. Although, LDA requires you to determine the number of "topics" in a corpus beforehand, while PCA allows you to choose the number of principle components needed based on their loadings.
-
-
-
-~~~r
-library(topicmodels)
-
-seed = 12345
-fit = LDA(dense_dtm, k = 4, control = list(seed=seed))
-~~~
-{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
-
-
-
-
-~~~r
-> terms(fit, 20)
-~~~
-{:title="Console" .input}
-
-
-~~~
-      Topic 1    Topic 2     Topic 3   Topic 4    
- [1,] "will"     "thank"     "will"    "can"      
- [2,] "get"      "lynn"      "thank"   "meet"     
- [3,] "ani"      "pleas"     "know"    "thank"    
- [4,] "look"     "let"       "can"     "know"     
- [5,] "let"      "get"       "pleas"   "work"     
- [6,] "know"     "like"      "want"    "will"     
- [7,] "need"     "agreement" "need"    "question" 
- [8,] "think"    "master"    "like"    "week"     
- [9,] "price"    "parti"     "ani"     "pleas"    
-[10,] "email"    "just"      "group"   "lynn"     
-[11,] "just"     "need"      "work"    "enron"    
-[12,] "time"     "call"      "lynn"    "trade"    
-[13,] "question" "back"      "dont"    "use"      
-[14,] "market"   "execut"    "just"    "send"     
-[15,] "send"     "receiv"    "see"     "get"      
-[16,] "lynn"     "want"      "talk"    "may"      
-[17,] "enron"    "servic"    "michell" "hope"     
-[18,] "call"     "take"      "time"    "veri"     
-[19,] "new"      "offic"     "make"    "schedul"  
-[20,] "one"      "enron"     "day"     "agreement"
+<<DocumentTermMatrix (documents: 3756, terms: 2454)>>
+Non-/sparse entries: 59821/9157403
+Sparsity           : 99%
+Maximal term length: 15
+Weighting          : term frequency (tf)
 ~~~
 {:.output}
 
 
 ===
 
-The topic "weights" can be assigned back to the documents for use in future analyses.
+## Term Correlations
+
+The `findAssocs` function checks columns of the document-term matrix for
+correlations. For example, words that are associated with the name of the CEO,
+Ken Lay.
 
 
 
 ~~~r
-topics <- posterior(fit, dense_dtm)$topics
-topics <- as.data.frame(topics)
-colnames(topics) <- c('accounts', 'meeting', 'call', 'legal')
+word_assoc <- findAssocs(dtm_trimmed, 'ken', 0.6)
+word_assoc <- data.frame(
+  word = names(word_assoc[[1]]),
+  assoc = word_assoc,
+  row.names = NULL)
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
+===
+
+A "wordcloud" emphasizes those words that have a high co-occurence
+in the email corpus with the CEO's first name.
+
 
 
 ~~~r
-> head(topics)
+> library(ggwordcloud)
+> 
+> ggplot(word_assoc,
++   aes(label = word, size = ken)) +
++   geom_text_wordcloud_area()
 ~~~
 {:title="Console" .input}
-
-
-~~~
-                            accounts   meeting      call     legal
-10001529.1075861306591.txt 0.2470315 0.2497333 0.2549814 0.2482538
-10016327.1075853078441.txt 0.2505420 0.2562433 0.2522828 0.2409319
-10025954.1075852266012.txt 0.2509041 0.2477392 0.2492562 0.2521004
-10029353.1075861906556.txt 0.2473255 0.2525143 0.2506372 0.2495230
-10042065.1075862047981.txt 0.2483039 0.2513652 0.2464095 0.2539213
-10050267.1075853166280.txt 0.2439128 0.2486203 0.2573323 0.2501346
-~~~
-{:.output}
-
+![ ]({% include asset.html path="images/mining/unnamed-chunk-14-1.png" %})
+{:.captioned}
