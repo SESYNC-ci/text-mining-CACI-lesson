@@ -1,0 +1,807 @@
+---
+---
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Structure for Unstructured Data</title>
+<meta name="description" content="Carve your texts into structured data.">
+<link rel="canonical"
+      href="https://sesync-ci.github.io/text-mining-lesson/2019/07/03/index.html">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@3.0/docs/assets/css/default.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@3.0/docs/assets/css/syntax.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@3.0/docs/assets/css/static.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+      rel="stylesheet"
+      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+      crossorigin="anonymous">
+
+    
+  </head>
+  <body>
+    <div class="page-content">
+      <div class="wrapper">
+        
+
+<h1 style="text-transform: none;" id="structure-for-unstructured-data">Structure for Unstructured Data</h1>
+
+<p>Lesson 10 with <em>Ian Carroll</em></p>
+
+<nav id="ToC">
+
+  <ul>
+    <li><a href="#/slides/data">Structured Data</a></li>
+    <li><a href="#/slides/scraping">Scraping</a></li>
+    <li><a href="#/slides/networks">Relational Data Extraction</a></li>
+    <li><a href="#/slides/mining">Text Mining</a></li>
+    <li><a href="#/slides/topic">Topic Modelling</a></li>
+  </ul>
+</nav>
+
+<hr />
+<p><a name="/slides/data"></a></p>
+
+<h2 id="structured-data">Structured Data</h2>
+
+<p>Structured data is a collection of multiple observations, each composed of one
+or more variables. Most analyses typically begin with structured data, the kind
+of tables you can view as a spreadhseet or numerical array.</p>
+
+<p class="notes">The key to <em>structure</em> is that information is packaged into well-defined
+variables, e.g. the columns of a tidy data frame. Typically, it took someone a
+lot of effort to get information into a useful structure.</p>
+
+<h2 id="well-defined-variables">Well-defined Variables</h2>
+
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/text-mining-lesson@v0.3/docs/assets/images/variable.png" alt="" width="30%" /><br />
+<em>Cox, M. 2015. Ecology &amp; Society 20(1):63.</em></p>
+
+<h2 id="variable-classification">Variable Classification</h2>
+
+<p>Every variable fits within one of four categories—these are more general categories
+than you find when enumerating “data types” as understood by R or Python.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><em>Numeric</em> (or <em>Interval</em>)</td>
+      <td>Values separated by meaningful intervals/distances</td>
+    </tr>
+    <tr>
+      <td><em>Ordered</em></td>
+      <td>Ordered values without “distance” between them</td>
+    </tr>
+    <tr>
+      <td><em>Categorical</em></td>
+      <td>Finite set of distinct, un-ordered values</td>
+    </tr>
+    <tr>
+      <td><em>Qualitative</em></td>
+      <td>Unlimited, discrete, and un-ordered possibilities</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>What we call quantitative data is actually any one of the first three.</p>
+
+<dl>
+  <dt>Qustion</dt>
+  <dd>What is one example of each of the three types of quantitative data (interval,
+ordered, and categorical) a biological survey might produce?</dd>
+  <dt>Answer</dt>
+  <dd class="fragment">For example, a fisheries survey might record size, age class
+(juvenile, adult), and species.</dd>
+</dl>
+
+<dl>
+  <dt>Qustion</dt>
+  <dd>What is an example of qualitative data the same biological survey might
+collect?</dd>
+  <dt>Answer</dt>
+  <dd class="fragment">Surveys often collect descriptive data, e.g. description of
+micro-habitat where an organism was found.</dd>
+</dl>
+
+<h2 id="unstructured-data">Unstructured Data</h2>
+
+<p>Information that has not been carved up into variables is unstructured “data”—
+although some say that is a misnomer. Any field researcher knows when they are
+staring down raw information, and they are usually puzzling over how to collect
+or structure it.</p>
+
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/text-mining-lesson@v0.3/docs/assets/images/salmon.jpg" alt="" width="25%" /> <img src="https://cdn.jsdelivr.net/gh/sesync-ci/text-mining-lesson@v0.3/docs/assets/images/cards.jpg" alt="" width="41.8%" /><br />
+<em>Photo by <a href="https://www.flickr.com/photos/50680623@N04">trinisands</a> / <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a> and by <a href="https://www.flickr.com/photos/archivesnz/">Archives New Zealand</a> / <a href="https://creativecommons.org/licenses/by/2.0/">CC BY</a></em></p>
+
+<p>Suppose you want to collect data on how businesses fail, so you download <a href="https://www.cs.cmu.edu/~./enron/">half a
+million e-mails from Enron executives</a> that
+preceeded the energy company’s collapse in 2001.</p>
+
+<div class="text-document no-eval highlighter-rouge" title="data/enron/16986095.1075852351708.txt"><div class="highlight"><pre class="highlight"><code>Message-ID: &lt;16986095.1075852351708.JavaMail.evans@thyme&gt;
+Date: Mon, 3 Sep 2001 12:24:09 -0700 (PDT)
+From: greg.whalley@enron.com
+To: kenneth.lay@enron.com, j..kean@enron.com
+Subject: FW: Management Committee Offsite
+
+I'm sorry I haven't been more involved is setting this up, but I think the
+agenda looks kond of soft.  At a minimum, I would like to turn the schedule
+around and hit the hard subjects like Q3, risk management, and ...
+</code></pre></div></div>
+
+<p class="notes">Structuring the data for analysis does not mean you quantify everything,
+although certainly some information can be quantified. Rather, turning
+unstructured information into structured data is a process of identifying
+concepts, definining variables, and assigning their values (i.e. taking
+measurements) from the text.</p>
+
+<p>Possible examples for variables of different classes to associate with the Enron e-mails.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><em>Numeric</em> (or <em>Interval</em>)</td>
+      <td>timestamp, e-mail length, occurrences of a given topic</td>
+    </tr>
+    <tr>
+      <td><em>Ordered</em></td>
+      <td>sender’s position in the company, step in process-tracing sequence of events</td>
+    </tr>
+    <tr>
+      <td><em>Categorical</em></td>
+      <td>sender’s department in the company, sender-recipient paris (e.g. network)</td>
+    </tr>
+    <tr>
+      <td><em>Qualitative</em></td>
+      <td>message subject matter, sender’s sentiment</td>
+    </tr>
+  </tbody>
+</table>
+
+<dl>
+  <dt>Question</dt>
+  <dd>What distinguishes <em>data</em> from unstructured information? What distinguishes <em>qualitative data</em> from unstructured information?</dd>
+  <dt>Answer</dt>
+  <dd class="fragment">Data is the measurement of a variable that relates to a well-defined concept, while information is free of any analytical framework. Data is qualitative if its measurement could give any value and no measure of distance exists for any pair of values.</dd>
+</dl>
+
+<p class="notes">Processing of texts, surveys, recordings, etc. into variables (whether qualitative or not), is often described as qualitiative data analysis.</p>
+
+<h2 id="computer-assisted-qda">Computer Assisted QDA</h2>
+
+<ul>
+  <li>Coding
+    <ul>
+      <li>Annotating a document collection by highlighting shared themes (CAQDA).</li>
+      <li>e.g. highlighting sections of an email collection with “codes” or “themes”</li>
+    </ul>
+  </li>
+  <li>Scraping
+    <ul>
+      <li>Process digitized information (websites, texts, images, recordings) into structured data.</li>
+      <li>e.g. capture sender, date, and greeting from emails, storing values in a data frame</li>
+    </ul>
+  </li>
+  <li>Text Mining
+    <ul>
+      <li>Processing text on the way to producing qualitative or quantitative data</li>
+      <li>e.g. bag-of-words matrix</li>
+    </ul>
+  </li>
+  <li>Topic Modeling
+    <ul>
+      <li>Algorithms for automatic coding of extensive document collections.</li>
+      <li>e.g. latent Dirichlet allocation (LDA)</li>
+    </ul>
+  </li>
+</ul>
+
+<p class="notes">These are different ways of performing “feature engineering”, which requires
+both domain knowledge and programing skill. The feature engineer faces the dual
+challenges of linking concepts to variables and of creating structured data
+about these variables from a source of raw information.</p>
+
+<p class="ToS"><a href="#/slides/data">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/scraping"></a></p>
+
+<h2 id="scraping">Scraping</h2>
+
+<p>For text analysis, whether online or following document OCR, few tools are as useful for pulling
+out strings that represent a value than “regular expressions”.</p>
+
+<p class="captioned"><img src="https://imgs.xkcd.com/comics/regular_expressions.png" alt="Text" title="Wait, forgot to escape a space. Wheeeeee[taptaptap]eeeeee." /><br />
+<em>by Randall Munroe / <a href="http://xkcd.com/license.html">CC BY-NC</a></em></p>
+
+<p>RegEx is a very flexible, and very fast, program for finding bits of text within
+a document that has particular features defined as a “pattern”.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Pattern</th>
+      <th>String with <span style="color:red;">match</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Subject:.*</td>
+      <td><span style="color:red;">Subject: Re: TPS Reports</span></td>
+    </tr>
+    <tr>
+      <td>\$[0-9,]+</td>
+      <td>The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil.</td>
+    </tr>
+    <tr>
+      <td>\b\S+@\S+\b</td>
+      <td>E-mail <span style="color:red;">info@sesync.org</span> or tweet @SESYNC for details!</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Note that “" must be escaped in R, so the third pattern does not look very
+nice in a R string.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">stringr</span><span class="p">)</span><span class="w">
+
+</span><span class="n">str_extract_all</span><span class="p">(</span><span class="w">
+  </span><span class="s1">'Email info@sesync.org or tweet @SESYNC for details!'</span><span class="p">,</span><span class="w">
+  </span><span class="s1">'\\b\\S+@\\S+\\b'</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[[1]]
+[1] "info@sesync.org"
+</code></pre></div></div>
+
+<p>Continuing with the Enron emails theme, begin by collecting the documents for
+analysis with the <strong>tm</strong> package.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">tm</span><span class="p">)</span><span class="w">
+
+</span><span class="n">enron</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">VCorpus</span><span class="p">(</span><span class="n">DirSource</span><span class="p">(</span><span class="s2">"data/enron"</span><span class="p">))</span><span class="w">
+</span><span class="n">email</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">enron</span><span class="p">[[</span><span class="m">1</span><span class="p">]]</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">meta</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  author       : character(0)
+  datetimestamp: 2019-07-26 10:47:47
+  description  : character(0)
+  heading      : character(0)
+  id           : 10001529.1075861306591.txt
+  language     : en
+  origin       : character(0)
+</code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">content</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [1] "Message-ID: &lt;10001529.1075861306591.JavaMail.evans@thyme&gt;"                                        
+ [2] "Date: Wed, 7 Nov 2001 13:58:24 -0800 (PST)"                                                       
+ [3] "From: dutch.quigley@enron.com"                                                                    
+ [4] "To: frthis@aol.com"                                                                               
+ [5] "Subject: RE: seeing as mark won't answer my e-mails...."                                          
+ [6] "Mime-Version: 1.0"                                                                                
+ [7] "Content-Type: text/plain; charset=us-ascii"                                                       
+ [8] "Content-Transfer-Encoding: 7bit"                                                                  
+ [9] "X-From: Quigley, Dutch &lt;/O=ENRON/OU=NA/CN=RECIPIENTS/CN=DQUIGLE&gt;"                                 
+[10] "X-To: 'Frthis@aol.com@ENRON'"                                                                     
+[11] "X-cc: "                                                                                           
+[12] "X-bcc: "                                                                                          
+[13] "X-Folder: \\DQUIGLE (Non-Privileged)\\Quigley, Dutch\\Sent Items"                                 
+[14] "X-Origin: Quigley-D"                                                                              
+[15] "X-FileName: DQUIGLE (Non-Privileged).pst"                                                         
+[16] ""                                                                                                 
+[17] "yes please on the directions"                                                                     
+[18] ""                                                                                                 
+[19] ""                                                                                                 
+[20] " -----Original Message-----"                                                                      
+[21] "From: \tFrthis@aol.com@ENRON  "                                                                   
+[22] "Sent:\tWednesday, November 07, 2001 3:57 PM"                                                      
+[23] "To:\tsiva66@mail.ev1.net; MarkM@cajunusa.com; Wolphguy@aol.com; martier@cpchem.com; klyn@pdq.net" 
+[24] "Cc:\tRs1119@aol.com; Quigley, Dutch; john_riches@msn.com; jramirez@othon.com; bwdunlavy@yahoo.com"
+[25] "Subject:\tRe: seeing as mark won't answer my e-mails...."                                         
+[26] ""                                                                                                 
+[27] "Kingwood Cove it is! "                                                                            
+[28] "Sunday "                                                                                          
+[29] "Tee Time(s):  8:06 and 8:12 "                                                                     
+[30] "Cost - $33 (includes cart) - that will be be $66 for Mr. 2700 Huevos. "                           
+[31] "ernie "                                                                                           
+[32] "Anyone need directions?"                                                                          
+</code></pre></div></div>
+
+<p>The RegEx pattern <code class="highlighter-rouge">^From: .*</code> matches any whole line that begins with “From: “.
+Parentheses cause parts of the match to be captured for substitution or
+extraction.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">match</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">str_match</span><span class="p">(</span><span class="n">content</span><span class="p">(</span><span class="n">email</span><span class="p">),</span><span class="w"> </span><span class="s1">'^From: (.*)'</span><span class="p">)</span><span class="w">
+</span><span class="n">head</span><span class="p">(</span><span class="n">match</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     [,1]                            [,2]                     
+[1,] NA                              NA                       
+[2,] NA                              NA                       
+[3,] "From: dutch.quigley@enron.com" "dutch.quigley@enron.com"
+[4,] NA                              NA                       
+[5,] NA                              NA                       
+[6,] NA                              NA                       
+</code></pre></div></div>
+
+<h2 id="data-extraction">Data Extraction</h2>
+
+<p>The <code class="highlighter-rouge">meta</code> object for each e-mail was sparsely populated, but some of those
+variables can be extracted from the <code class="highlighter-rouge">content</code>.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">enron</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tm_map</span><span class="p">(</span><span class="n">enron</span><span class="p">,</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">body</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">content</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+  </span><span class="n">match</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">str_match</span><span class="p">(</span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="s1">'^From: (.*)'</span><span class="p">)</span><span class="w">
+  </span><span class="n">match</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">na.omit</span><span class="p">(</span><span class="n">match</span><span class="p">)</span><span class="w">
+  </span><span class="n">meta</span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="s1">'author'</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">match</span><span class="p">[[</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">]]</span><span class="w">
+  </span><span class="nf">return</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+</span><span class="p">})</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">enron</span><span class="p">[[</span><span class="m">1</span><span class="p">]]</span><span class="w">
+</span><span class="o">&gt;</span><span class="w"> </span><span class="n">meta</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  author       : dutch.quigley@enron.com
+  datetimestamp: 2019-07-26 10:47:47
+  description  : character(0)
+  heading      : character(0)
+  id           : 10001529.1075861306591.txt
+  language     : en
+  origin       : character(0)
+</code></pre></div></div>
+
+<p class="ToS"><a href="#/slides/scraping">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/networks"></a></p>
+
+<h2 id="relational-data-extraction">Relational Data Extraction</h2>
+
+<p>Relational data are tables that establish a relationship between entities from
+other tables.</p>
+
+<p class="notes">Suppose we have a table with a record for each unique email address in the Enron
+emails, then a second table with a record for each pair of addresses that
+exchanged a message is relational data.</p>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">enron</span><span class="p">[[</span><span class="m">2</span><span class="p">]]</span><span class="w">
+</span><span class="o">&gt;</span><span class="w"> </span><span class="n">head</span><span class="p">(</span><span class="n">content</span><span class="p">(</span><span class="n">email</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "Message-ID: &lt;10016327.1075853078441.JavaMail.evans@thyme&gt;"               
+[2] "Date: Mon, 20 Aug 2001 16:14:45 -0700 (PDT)"                             
+[3] "From: lynn.blair@enron.com"                                              
+[4] "To: ronnie.brickman@enron.com, randy.howard@enron.com"                   
+[5] "Subject: RE: Liquids in Region"                                          
+[6] "Cc: ld.stephens@enron.com, team.sublette@enron.com, w.miller@enron.com, "
+</code></pre></div></div>
+
+<p>This “To:” field is slightly harder to extract, because it may include multiple
+recipients.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">get_to</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">body</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">content</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+  </span><span class="n">match</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">str_detect</span><span class="p">(</span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="s1">'^To:'</span><span class="p">)</span><span class="w">
+  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nf">any</span><span class="p">(</span><span class="n">match</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">to_start</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">which</span><span class="p">(</span><span class="n">match</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span><span class="w">
+    </span><span class="n">match</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">str_detect</span><span class="p">(</span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="s1">'^Subject:'</span><span class="p">)</span><span class="w">
+    </span><span class="n">to_end</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">which</span><span class="p">(</span><span class="n">match</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="w">
+    </span><span class="n">to</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">paste</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="n">to_start</span><span class="o">:</span><span class="n">to_end</span><span class="p">],</span><span class="w"> </span><span class="n">collapse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span><span class="w">
+    </span><span class="n">to</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">str_extract_all</span><span class="p">(</span><span class="n">to</span><span class="p">,</span><span class="w"> </span><span class="s1">'\\b\\S+@\\S+\\b'</span><span class="p">)</span><span class="w">
+    </span><span class="nf">return</span><span class="p">(</span><span class="n">unlist</span><span class="p">(</span><span class="n">to</span><span class="p">))</span><span class="w">
+  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nf">return</span><span class="p">(</span><span class="kc">NA</span><span class="p">)</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">get_to</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "ronnie.brickman@enron.com" "randy.howard@enron.com"   
+</code></pre></div></div>
+
+<p>Embed the above lines in a for loop to build an edge list for the network of
+e-mail senders and recipients.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">edges</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lapply</span><span class="p">(</span><span class="n">enron</span><span class="p">,</span><span class="w"> </span><span class="n">FUN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">from</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">meta</span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="s1">'author'</span><span class="p">)</span><span class="w">
+  </span><span class="n">to</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">get_to</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+  </span><span class="nf">return</span><span class="p">(</span><span class="n">cbind</span><span class="p">(</span><span class="n">from</span><span class="p">,</span><span class="w"> </span><span class="n">to</span><span class="p">))</span><span class="w">
+</span><span class="p">})</span><span class="w">
+</span><span class="n">edges</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">do.call</span><span class="p">(</span><span class="n">rbind</span><span class="p">,</span><span class="w"> </span><span class="n">edges</span><span class="p">)</span><span class="w">
+</span><span class="n">edges</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">na.omit</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span><span class="w">
+</span><span class="nf">attr</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span><span class="w"> </span><span class="s1">'na.action'</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">NULL</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="nf">dim</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 10493     2
+</code></pre></div></div>
+
+<p>The <strong>network</strong> package provides convenient tools for working with relational data.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">network</span><span class="p">)</span><span class="w">
+
+</span><span class="n">g</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">network</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/text-mining-lesson@v0.3/docs/assets/images/networks/network_graph-1.png" alt=" " /></p>
+
+<dl>
+  <dt>Question</dt>
+  <dd>Is a network qualitative or quantitative data?</dd>
+  <dt>Answer</dt>
+  <dd class="fragment">It certainly doesn’t fall into line with traditional statistical
+methods, but the variables involved are categorical. Methods for fitting models
+on networks (e.g. ERGMs) are an active research area.</dd>
+</dl>
+
+<p class="ToS"><a href="#/slides/networks">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/mining"></a></p>
+
+<h2 id="text-mining">Text Mining</h2>
+
+<p>Developing measurements of quantitative variables from unstructured information
+is another component of the “field-work” in research projects that rely on texts
+for empirical observations.</p>
+
+<ul>
+  <li>Searching strings for patterns</li>
+  <li>Cleaning strings of un-informative patterns</li>
+  <li>Quantifying string occurrences and associations</li>
+  <li>Interpretting the meaning of associated strings</li>
+</ul>
+
+<h2 id="cleaning-text">Cleaning Text</h2>
+
+<p>Assuming the structured data in the Enron e-mail headers has been captured,
+strip down the content to the unstructured message.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">enron</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tm_map</span><span class="p">(</span><span class="n">enron</span><span class="p">,</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">body</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">content</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+  </span><span class="n">match</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">str_detect</span><span class="p">(</span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="s1">'^X-FileName:'</span><span class="p">)</span><span class="w">
+  </span><span class="n">begin</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">which</span><span class="p">(</span><span class="n">match</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="w">
+  </span><span class="n">match</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">str_detect</span><span class="p">(</span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="s1">'^[&gt;\\s]*[_\\-]{2}'</span><span class="p">)</span><span class="w">
+  </span><span class="n">match</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">match</span><span class="p">,</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
+  </span><span class="n">end</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">which</span><span class="p">(</span><span class="n">match</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="w">
+  </span><span class="n">content</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">body</span><span class="p">[</span><span class="n">begin</span><span class="o">:</span><span class="n">end</span><span class="p">]</span><span class="w">
+  </span><span class="nf">return</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+</span><span class="p">})</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">enron</span><span class="p">[[</span><span class="m">2</span><span class="p">]]</span><span class="w">
+</span><span class="o">&gt;</span><span class="w"> </span><span class="n">content</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] ""                                                                                             
+[2] "\tRonnie, I just got back from vacation and wanted to follow up on the discussion below."     
+[3] "\tHave you heard back from Jerry?  Do you need me to try calling Delaine again?  Thanks. Lynn"
+[4] ""                                                                                             
+</code></pre></div></div>
+
+<h2 id="predefind-cleaning-functions">Predefind Cleaning Functions</h2>
+
+<p>These are some of the functions listed by <code class="highlighter-rouge">getTransformations</code>.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">magrittr</span><span class="p">)</span><span class="w">
+
+</span><span class="n">enron_words</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">enron</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">tm_map</span><span class="p">(</span><span class="n">removePunctuation</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">tm_map</span><span class="p">(</span><span class="n">removeNumbers</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">tm_map</span><span class="p">(</span><span class="n">stripWhitespace</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">enron_words</span><span class="p">[[</span><span class="m">2</span><span class="p">]]</span><span class="w">
+</span><span class="o">&gt;</span><span class="w"> </span><span class="n">content</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] ""                                                                                       
+[2] " Ronnie I just got back from vacation and wanted to follow up on the discussion below"  
+[3] " Have you heard back from Jerry Do you need me to try calling Delaine again Thanks Lynn"
+[4] ""                                                                                       
+</code></pre></div></div>
+
+<p>Customize document preparation with your own functions. The function must be
+wrapped in <code class="highlighter-rouge">content_transformer</code> if designed to accept and return strings rather
+than PlainTextDocuments.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">remove_link</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">match</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">str_detect</span><span class="p">(</span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="s1">'(http|www|mailto)'</span><span class="p">)</span><span class="w">
+  </span><span class="n">body</span><span class="p">[</span><span class="o">!</span><span class="n">match</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="n">enron_words</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">enron_words</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">tm_map</span><span class="p">(</span><span class="n">content_transformer</span><span class="p">(</span><span class="n">remove_link</span><span class="p">))</span><span class="w">  
+</span></code></pre></div></div>
+
+<h1 id="stopwords-and-stems">Stopwords and Stems</h1>
+
+<p class="notes">Stopwords are the throwaway words that don’t inform content, and lists for
+different languages are complied within <strong>tm</strong>. Before removing them though,
+also “stem” the current words to remove plurals and other nuissances.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">enron_words</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">enron_words</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">tm_map</span><span class="p">(</span><span class="n">stemDocument</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">tm_map</span><span class="p">(</span><span class="n">removeWords</span><span class="p">,</span><span class="w"> </span><span class="n">stopwords</span><span class="p">(</span><span class="s2">"english"</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="document-term-matrix">Document-Term Matrix</h2>
+
+<p>The “bag-of-words” model for turning a corpus into structured data is
+to simply count the word frequency in each document.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">dtm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">DocumentTermMatrix</span><span class="p">(</span><span class="n">enron_words</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="long-form">Long Form</h2>
+
+<p>The <a href="" class="rlib">tidytext</a> package converts the (wide) Document Term Matrix
+into a longer form table with a row for every document and term combination.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">tidytext</span><span class="p">)</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span><span class="w">
+
+</span><span class="n">dtt</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tidy</span><span class="p">(</span><span class="n">dtm</span><span class="p">)</span><span class="w">
+</span><span class="n">words</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dtt</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">group_by</span><span class="p">(</span><span class="n">term</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">summarise</span><span class="p">(</span><span class="w">
+    </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">(),</span><span class="w">
+    </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">count</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">mutate</span><span class="p">(</span><span class="n">nchar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nchar</span><span class="p">(</span><span class="n">term</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">words</code> data frame is more amenable to further inspection and
+cleaning, such as removing outliers.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span><span class="w">
+
+</span><span class="n">ggplot</span><span class="p">(</span><span class="n">words</span><span class="p">,</span><span class="w"> </span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nchar</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">geom_histogram</span><span class="p">(</span><span class="n">binwidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/text-mining-lesson@v0.3/docs/assets/images/mining/unnamed-chunk-9-1.png" alt=" " /></p>
+
+<p>Words with too many characters are probably not actually words, and extremely
+uncommon words won’t help when searching for patterns.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">dtt_trimmed</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">words</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">filter</span><span class="p">(</span><span class="w">
+    </span><span class="n">nchar</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">16</span><span class="p">,</span><span class="w">
+    </span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w">
+    </span><span class="n">total</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">select</span><span class="p">(</span><span class="n">term</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">inner_join</span><span class="p">(</span><span class="n">dtt</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Joining, by = "term"
+</code></pre></div></div>
+
+<p>Further steps in analyzing this “bag-of-words” require returning to the
+Document-Term-Matrix structure.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">dtm_trimmed</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dtt_trimmed</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">cast_dtm</span><span class="p">(</span><span class="n">document</span><span class="p">,</span><span class="w"> </span><span class="n">term</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">dtm_trimmed</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;&lt;DocumentTermMatrix (documents: 3756, terms: 2454)&gt;&gt;
+Non-/sparse entries: 59821/9157403
+Sparsity           : 99%
+Maximal term length: 15
+Weighting          : term frequency (tf)
+</code></pre></div></div>
+
+<h2 id="term-correlations">Term Correlations</h2>
+
+<p>The <code class="highlighter-rouge">findAssocs</code> function checks columns of the document-term matrix for
+correlations. For example, words that are associated with the name of the CEO,
+Ken Lay.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">word_assoc</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">findAssocs</span><span class="p">(</span><span class="n">dtm_trimmed</span><span class="p">,</span><span class="w"> </span><span class="s1">'ken'</span><span class="p">,</span><span class="w"> </span><span class="m">0.6</span><span class="p">)</span><span class="w">
+</span><span class="n">word_assoc</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="w">
+  </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">word_assoc</span><span class="p">[[</span><span class="m">1</span><span class="p">]]),</span><span class="w">
+  </span><span class="n">assoc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word_assoc</span><span class="p">,</span><span class="w">
+  </span><span class="n">row.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>A “wordcloud” emphasizes those words that have a high co-occurence
+in the email corpus with the CEO’s first name.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">ggwordcloud</span><span class="p">)</span><span class="w">
+
+</span><span class="n">ggplot</span><span class="p">(</span><span class="n">word_assoc</span><span class="p">,</span><span class="w">
+  </span><span class="n">aes</span><span class="p">(</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ken</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">geom_text_wordcloud_area</span><span class="p">()</span><span class="w">
+</span></code></pre></div></div>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/text-mining-lesson@v0.3/docs/assets/images/mining/unnamed-chunk-14-1.png" alt=" " /></p>
+
+<p class="ToS"><a href="#/slides/mining">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/topic"></a></p>
+
+<h2 id="topic-modelling">Topic Modelling</h2>
+
+<p class="notes">Latent Dirichlet Allocation (LDA) is an algorithim that’s conceptually similar
+to dimensionallity reduction techniques for numerical data, such as PCA.
+Although, LDA requires you to determine the number of “topics” in a corpus
+beforehand, while PCA allows you to choose the number of principle components
+needed based on their loadings.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">topicmodels</span><span class="p">)</span><span class="w">
+
+</span><span class="n">seed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">12345</span><span class="w">
+</span><span class="n">fit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LDA</span><span class="p">(</span><span class="n">dtm_trimmed</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">control</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">terms</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span><span class="w"> </span><span class="m">20</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      Topic 1    Topic 2 Topic 3      Topic 4    Topic 5    
+ [1,] "thank"    "get"   "market"     "price"    "mari"     
+ [2,] "lynn"     "will"  "monika"     "the"      "agreement"
+ [3,] "will"     "know"  "enron"      "enron"    "enron"    
+ [4,] "pleas"    "can"   "financi"    "will"     "pleas"    
+ [5,] "meet"     "just"  "pulp"       "compani"  "thank"    
+ [6,] "can"      "like"  "includ"     "market"   "attach"   
+ [7,] "let"      "think" "compani"    "gas"      "will"     
+ [8,] "bill"     "dont"  "trader"     "trade"    "master"   
+ [9,] "know"     "time"  "skill"      "energi"   "know"     
+[10,] "need"     "look"  "load"       "deal"     "fax"      
+[11,] "fyi"      "want"  "trade"      "manag"    "let"      
+[12,] "ani"      "work"  "price"      "parti"    "ani"      
+[13,] "question" "call"  "inform"     "new"      "copi"     
+[14,] "call"     "one"   "north"      "transact" "need"     
+[15,] "schedul"  "good"  "oregon"     "this"     "corp"     
+[16,] "discuss"  "need"  "make"       "month"    "document" 
+[17,] "work"     "back"  "causholli"  "contract" "can"      
+[18,] "get"      "take"  "temperatur" "posit"    "send"     
+[19,] "group"    "day"   "data"       "use"      "sign"     
+[20,] "michell"  "hope"  "attach"     "servic"   "servic"   
+</code></pre></div></div>
+
+<p class="notes">By assigning topic “weights” back to the documents, which gives an indication of how likely it
+is to find each topic in a document, you have engineered some numerical features associated
+with each document that might further help with classification or visualization.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">email_topics</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="w">
+  </span><span class="n">posterior</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span><span class="w"> </span><span class="n">dtm_trimmed</span><span class="p">)</span><span class="o">$</span><span class="n">topics</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">head</span><span class="p">(</span><span class="n">email_topics</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                                      1            2           3         4
+15572442.1075858843984.txt 3.720195e-05 0.4526013220 0.229491023 0.3178332
+3203154.1075852351910.txt  6.036603e-03 0.6220533207 0.120064073 0.2458096
+13645178.1075839996540.txt 4.612527e-01 0.0029070018 0.051030738 0.3338006
+22210912.1075858601602.txt 8.923614e-04 0.0008921769 0.012294932 0.9850281
+2270209.1075858847824.txt  1.401818e-01 0.2407141202 0.002458558 0.6141870
+26147562.1075839996615.txt 7.567838e-02 0.2396156416 0.101497075 0.5829608
+                                      5
+15572442.1075858843984.txt 3.721505e-05
+3203154.1075852351910.txt  6.036383e-03
+13645178.1075839996540.txt 1.510089e-01
+22210912.1075858601602.txt 8.924571e-04
+2270209.1075858847824.txt  2.458535e-03
+26147562.1075839996615.txt 2.481385e-04
+</code></pre></div></div>
+
+<p>The challeng with LDA, as with any machine learning result, is interpretting the
+result. Are the “topics” recognizable by the words used?</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-10.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">ggwordcloud</span><span class="p">)</span><span class="w">
+
+</span><span class="n">topics</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tidy</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">filter</span><span class="p">(</span><span class="n">beta</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.004</span><span class="p">)</span><span class="w">
+
+</span><span class="n">ggplot</span><span class="p">(</span><span class="n">topics</span><span class="p">,</span><span class="w">
+  </span><span class="n">aes</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">term</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">geom_text_wordcloud_area</span><span class="p">(</span><span class="n">rm_outside</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">facet_wrap</span><span class="p">(</span><span class="n">vars</span><span class="p">(</span><span class="n">topic</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/text-mining-lesson@v0.3/docs/assets/images/topic/unnamed-chunk-5-1.png" alt=" " /></p>
+
+<p class="ToS"><a href="#/slides/topic">Top of Section</a></p>
+
+
+
+        <hr>
+
+<p>If you need to catch-up before a section of code will work, just squish it's
+🍅 to copy code above it into your clipboard. Then paste into your interpreter's
+console, run, and you'll be ready to start in on that section. Code copied by
+both 🍅 and 📋 will also appear below, where you can edit first, and then copy,
+paste, and run again.</p>
+
+<div class="output">
+  <pre id="ketchup" contenteditable="true"><code># Nothing here yet!</code></pre>
+</div>
+
+<script>
+$(document).ready(function(){
+  
+  // Add code help icons to code blocks
+  $('.input, .text-document').append('<ul class="code-help">');
+  $('.code-help')
+    .append('<li class="clipboard">📋</li>');
+  $('.text-document:not(.no-eval) .code-help')
+    .append('<li class="ketchup">🍅</li>');
+
+  // Bind copy actions to mouse clicks on icons
+  var $ketchup = $('#ketchup');
+  var rng = document.createRange();
+  var sel = window.getSelection();
+  $('.ketchup').click(function(){
+    var $prev = $(this)
+      .parents('.text-document')
+      .prevAll('.text-document:has(.ketchup)');
+    $ketchup.find('code').text($prev.find('pre').text());
+    rng.selectNodeContents($ketchup[0]);
+    sel.removeAllRanges();
+    sel.addRange(rng);
+    document.execCommand("copy");
+    sel.removeAllRanges();
+  });
+  $('.text-document .clipboard').click(function(){
+    var pre = $(this).parents('.text-document').find('pre').text();
+    $ketchup.find('code').text(pre);
+    rng.selectNodeContents($ketchup[0]);
+    sel.removeAllRanges();
+    sel.addRange(rng);
+    document.execCommand("copy");
+    sel.removeAllRanges();
+  });
+  $('.input .clipboard').click(function(){
+    var pre = $(this).parents('.input').find('pre').text();
+    pre = pre.replace(/(^|\n)[>+] /g, '$1');
+    $ketchup.find('code').text(pre);
+    rng.selectNodeContents($ketchup[0]);
+    sel.removeAllRanges();
+    sel.addRange(rng);
+    document.execCommand("copy");
+    sel.removeAllRanges();
+  });
+});
+</script>
+      </div>
+    </div>
+    <script>
+$(document).ready(function(){
+  // Add links to R and Python package repositories
+  $('a.rlib').map(function(){
+    this.href = 'https://cran.r-project.org/package=' + this.innerText;
+  });
+  $('a.pylib').map(function(){
+    this.href = 'https://pypi.python.org/pypi/' + this.innerText;
+  });
+});
+</script>
+
+  </body>
+</html>
