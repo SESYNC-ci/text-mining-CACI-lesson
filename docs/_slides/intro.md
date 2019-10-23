@@ -1,6 +1,6 @@
 ---
-  
 ---
+
 ## Lesson Objectives
   
  - Learn methods for subsetting and cleaning text
@@ -15,4 +15,3 @@
  - Extract word relationships
  - Build clean body of text for analysis
  
-
