@@ -3,10 +3,11 @@ handouts:
  - worksheet.R
  - data/enron
  - data/README.md
-tag: v0.2
+tag: v0.0
 instructor: Rachael Blake
 authors:
  - Ian Carroll
+ - Rachael Blake
 lesson: 10
 sorter:
   - data
