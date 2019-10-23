@@ -1,4 +1,4 @@
-# Text Analysis Lesson
+# CACI Text Analysis Lesson
    
 Basics of analyzing text in R.
   
@@ -13,7 +13,9 @@ Because this lesson will not be taught from inside the SESYNC teaching lab (Dock
    ~~~
  - Download of zipped file with data, handouts, and worksheet (URL is at top of lesson website), unzipped into the directory (a.k.a. folder) where you plan to work.
 
+# Code of Conduct
 
+We will follow the Carpentries Code of Conduct.  https://docs.carpentries.org/topic_folders/policies/code-of-conduct.html#reporting-guidelines
   
 # Cyberhelp @SESYNC
   

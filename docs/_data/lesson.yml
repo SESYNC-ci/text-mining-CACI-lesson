@@ -10,6 +10,7 @@ authors:
  - Rachael Blake
 lesson: 10
 sorter:
+  - intro
   - data
   - scraping
   - networks
