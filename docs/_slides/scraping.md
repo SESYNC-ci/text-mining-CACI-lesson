@@ -73,7 +73,7 @@ email <- enron[[1]]
 
 ~~~
   author       : character(0)
-  datetimestamp: 2019-07-26 10:47:47
+  datetimestamp: 2019-10-23 18:10:02
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -191,7 +191,7 @@ enron <- tm_map(enron, function(email) {
 
 ~~~
   author       : dutch.quigley@enron.com
-  datetimestamp: 2019-07-26 10:47:47
+  datetimestamp: 2019-10-23 18:10:02
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
