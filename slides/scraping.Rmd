@@ -92,3 +92,15 @@ enron <- tm_map(enron, function(email) {
 email <- enron[[1]]
 meta(email)
 ```
+
+===
+
+## Exercise 1
+
+Now that you've learned a bit about extracting strings, try using regex to extract 
+money values from the e-mail body content. 
+
+[View solution](#solution-1)
+{:.notes}
+
+===

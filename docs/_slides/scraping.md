@@ -28,6 +28,9 @@ a document that has particular features defined as a "pattern".
 Note that "\" must be escaped in R, so the third pattern does not look very
 nice in a R string.
 
+It can be difficult to tell exactly what your regex is doing.  You might find it useful to test out 
+your regex here: [https://regex101.com/](https://regex101.com/)
+
 
 
 ~~~r
@@ -200,3 +203,9 @@ enron <- tm_map(enron, function(email) {
 ~~~
 {:.output}
 
+===
+
+## Exercise 1
+
+
+===

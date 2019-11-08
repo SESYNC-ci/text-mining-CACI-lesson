@@ -1,0 +1,18 @@
+---
+---
+
+## Solutions
+
+===
+
+### Solution 1
+
+```{r, handout = 0}
+str_extract_all(content(email), '\\$\\S+\\b')
+```
+
+[Return](#exercise-1)
+{:.notes}
+
+===
+
