@@ -164,6 +164,15 @@ dtm_trimmed
 
 ===
 
+## Exercise 2
+
+Word frequency in a document might also be interesting. Try plotting a histogram of the number of times a word appears. 
+
+[View solution](#solution-2)
+{:.notes}
+
+===
+
 ## Term Correlations
 
 The `findAssocs` function checks columns of the document-term matrix for
@@ -190,3 +199,14 @@ ggplot(word_assoc,
   aes(label = word, size = ken)) +
   geom_text_wordcloud_area()
 ```
+
+===
+
+## Exercise 3
+
+What terms are associated with the word pipeline ("pipelin" after trimming)?  How can you visualize this? 
+
+[View solution](#solution-3)
+{:.notes}
+
+===
