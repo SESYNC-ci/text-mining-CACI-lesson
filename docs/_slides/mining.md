@@ -55,7 +55,7 @@ enron <- tm_map(enron, function(email) {
 
 ===
 
-## Predefind Cleaning Functions
+## Predefined Cleaning Functions
 
 These are some of the functions listed by `getTransformations`.
 
@@ -247,6 +247,15 @@ Weighting          : term frequency (tf)
 
 ===
 
+## Exercise 2
+
+Word frequency in a document might also be interesting. Try plotting a histogram of the number of times a word appears. 
+
+[View solution](#solution-2)
+{:.notes}
+
+===
+
 ## Term Correlations
 
 The `findAssocs` function checks columns of the document-term matrix for
@@ -282,3 +291,14 @@ ggplot(word_assoc,
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 ![ ]({% include asset.html path="images/mining/unnamed-chunk-14-1.png" %})
 {:.captioned}
+
+===
+
+## Exercise 3
+
+What terms are associated with the word pipeline ("pipelin" after trimming)?  How can you visualize this? 
+
+[View solution](#solution-3)
+{:.notes}
+
+===

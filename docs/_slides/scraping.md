@@ -23,13 +23,12 @@ a document that has particular features defined as a "pattern".
 | \\$[0-9,]+   | The ransom of <span style="color:red;">$1,000,000</span> to Dr. Evil.                |
 | \b\S+@\S+\b  | E-mail <span style="color:red;">info@sesync.org</span> or tweet @SESYNC for details! |
 
+Specifying these patterns correctly can be tricky.  You can test out regex patterns [here](https://regex101.com/).  
+
 ===
 
 Note that "\" must be escaped in R, so the third pattern does not look very
 nice in a R string.
-
-It can be difficult to tell exactly what your regex is doing.  You might find it useful to test out 
-your regex here: [https://regex101.com/](https://regex101.com/)
 
 
 
@@ -203,9 +202,15 @@ enron <- tm_map(enron, function(email) {
 ~~~
 {:.output}
 
+
 ===
 
 ## Exercise 1
 
+Now that you've learned a bit about extracting strings, try using regex to extract 
+money values from the e-mail body content. 
+
+[View solution](#solution-1)
+{:.notes}
 
 ===
