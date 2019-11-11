@@ -55,6 +55,3 @@ ggplot(word_assoc,
 
 [Return](#exercise-3)
 {:.notes}
-
-===
-  

@@ -41,7 +41,7 @@ head(email_topics)
 
 ===
 
-The challeng with LDA, as with any machine learning result, is interpretting the
+The challenge with LDA, as with any machine learning result, is interpretting the
 result. Are the "topics" recognizable by the words used?
 
 ```{r, handout = 0}
