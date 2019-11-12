@@ -9,7 +9,7 @@ Because this lesson will not be taught from inside the SESYNC teaching lab (Dock
  - RStudio installed on laptop    https://rstudio.com/
  - R packages installed
    ~~~r
-   install.packages("stringr", "tm", "network", "magrittr", "tidytext", "dplyr", "ggplot2", "ggwordcloud", "topicmodels")
+   install.packages(c("stringr", "tm", "network", "magrittr", "tidytext", "dplyr", "ggplot2", "ggwordcloud", "topicmodels"))
    ~~~
  - Download of zipped file with data, handouts, and worksheet (URL is at top of lesson website), unzipped into the directory (a.k.a. folder) where you plan to work.
 
