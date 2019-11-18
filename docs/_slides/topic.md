@@ -102,7 +102,7 @@ email_topics <- as.data.frame(
 
 ===
 
-The challenge with LDA, as with any machine learning result, is interpretting the
+The challenge with LDA, as with any machine learning result, is interpreting the
 result. Are the "topics" recognizable by the words used?
 
 

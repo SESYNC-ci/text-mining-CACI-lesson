@@ -27,6 +27,8 @@ lot of effort to get information into a useful structure.
 Every variable fits within one of four categories---these are more general categories
 than you find when enumerating "data types" as understood by R or Python.
 
+===
+
 | Category | Definition |
 |----------|------------|
 | *Numeric* (or *Interval*) | Values separated by meaningful intervals/distances |
@@ -37,6 +39,8 @@ than you find when enumerating "data types" as understood by R or Python.
 ===
 
 What we call quantitative data is actually any one of the first three.
+
+===
 
 Qustion
 : What is one example of each of the three types of quantitative data (interval,
@@ -99,6 +103,8 @@ measurements) from the text.
 
 Possible examples for variables of different classes to associate with the Enron e-mails.
 
+===
+
 | Category | Example |
 |----------|---------|
 | *Numeric* (or *Interval*) | timestamp, e-mail length, occurrences of a given topic |
@@ -129,12 +135,17 @@ Processing of texts, surveys, recordings, etc. into variables (whether qualitati
 - Scraping
   - Process digitized information (websites, texts, images, recordings) into structured data.
   - e.g. capture sender, date, and greeting from emails, storing values in a data frame
+  
+===  
+  
 - Text Mining
   - Processing text on the way to producing qualitative or quantitative data
   - e.g. bag-of-words matrix
 - Topic Modeling
   - Algorithms for automatic coding of extensive document collections.
   - e.g. latent Dirichlet allocation (LDA)
+
+===
 
 These are different ways of performing "feature engineering", which requires
 both domain knowledge and programing skill. The feature engineer faces the dual

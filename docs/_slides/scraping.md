@@ -27,7 +27,7 @@ Specifying these patterns correctly can be tricky.  You can test out regex patte
 
 ===
 
-Note that "\" must be escaped in R, so the third pattern does not look very
+Note that "\\" must be escaped in R, so the third pattern does not look very
 nice in a R string.
 
 
@@ -75,7 +75,7 @@ email <- enron[[1]]
 
 ~~~
   author       : character(0)
-  datetimestamp: 2019-11-12 14:43:37
+  datetimestamp: 2019-11-13 22:37:32
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt
@@ -193,7 +193,7 @@ enron <- tm_map(enron, function(email) {
 
 ~~~
   author       : dutch.quigley@enron.com
-  datetimestamp: 2019-11-12 14:43:37
+  datetimestamp: 2019-11-13 22:37:32
   description  : character(0)
   heading      : character(0)
   id           : 10001529.1075861306591.txt

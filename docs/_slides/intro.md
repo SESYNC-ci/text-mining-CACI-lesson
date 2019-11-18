@@ -1,6 +1,10 @@
 ---
 ---
 
+# Basic Text Analysis in R
+
+===
+
 ## Lesson Objectives
 
   - Learn methods for subsetting and cleaning text

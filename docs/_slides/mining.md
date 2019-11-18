@@ -7,6 +7,8 @@ Developing measurements of quantitative variables from unstructured information
 is another component of the "field-work" in research projects that rely on texts
 for empirical observations.
 
+===
+
 - Searching strings for patterns
 - Cleaning strings of un-informative patterns
 - Quantifying string occurrences and associations
@@ -18,6 +20,8 @@ for empirical observations.
 
 Assuming the structured data in the Enron e-mail headers has been captured,
 strip down the content to the unstructured message.
+
+===
 
 
 
@@ -58,6 +62,8 @@ enron <- tm_map(enron, function(email) {
 ## Predefined Cleaning Functions
 
 These are some of the functions listed by `getTransformations`.
+
+===
 
 
 
@@ -111,7 +117,7 @@ enron_words <- enron_words %>%
 
 ===
 
-# Stopwords and Stems
+## Stopwords and Stems
 
 Stopwords are the throwaway words that don't inform content, and lists for
 different languages are complied within **tm**. Before removing them though,
@@ -134,8 +140,6 @@ enron_words <- enron_words %>%
 
 The "bag-of-words" model for turning a corpus into structured data is
 to simply count the word frequency in each document.
-
-===
 
 
 

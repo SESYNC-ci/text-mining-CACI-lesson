@@ -1,4 +1,4 @@
-title: "Structure for Unstructured Data: Basic Text Analysis in R"
+title: "Structure for Unstructured Data"
 handouts:
  - worksheet.R
  - data/enron
@@ -8,7 +8,7 @@ instructor: Rachael Blake
 authors:
  - Ian Carroll
  - Rachael Blake
-lesson: 1
+lesson: 
 sorter:
   - intro
   - data
